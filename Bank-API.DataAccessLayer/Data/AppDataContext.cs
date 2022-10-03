@@ -23,7 +23,9 @@ namespace Bank_API.DataAccessLayer.DataContext
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder.UseSqlServer(@"Server=localhost\\SQLEXPRESS;Database=bank-api;Trusted_Connection=True");
+                optionsBuilder
+                    .UseSqlServer(@"Server=localhost\\SQLEXPRESS;Database=bank-api;Trusted_Connection=True")
+                    .UseSnakeCaseNamingConvention();
             }
         }
 
