@@ -1,14 +1,25 @@
-var builder = WebApplication.CreateBuilder(args);
+using Bank_API.BusinessLogicLayer.Interfaces;
+using Bank_API.BusinessLogicLayer.Services;
+using Bank_API.DataAccessLayer.DataContext;
+using Bank_API.DataAccessLayer.Interfaces;
+using Bank_API.DataAccessLayer.Models;
+using Bank_API.DataAccessLayer.Repositories;
+using Microsoft.EntityFrameworkCore;
 
-// Add services to the container.
+var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var connectionString = builder.Configuration.GetConnectionString("DefaultConnection");
+builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.UseSqlServer(connectionString));
+
+builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
+builder.Services.AddScoped<IUserService, UserService>();
+
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -17,8 +28,14 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();
+
+using var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
+using var context = serviceScope.ServiceProvider.GetRequiredService<AppDataContext>();
+context.Database.EnsureCreated();
+context.Database.Migrate();
 
 app.Run();
