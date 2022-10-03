@@ -35,7 +35,7 @@ app.MapControllers();
 
 using var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 using var context = serviceScope.ServiceProvider.GetRequiredService<AppDataContext>();
-//context.Database.EnsureCreated();
-//context.Database.Migrate();
+context.Database.EnsureCreated();
+context.Database.Migrate();
 
 app.Run();

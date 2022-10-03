@@ -25,7 +25,7 @@ namespace Bank_API.DataAccessLayer.Models
         [Phone]
         [StringLength(16, MinimumLength = 1)]
         [Required]
-        public string PhoneNumber { get; set; }
+        public string Phone { get; set; }
 
         [Required]
         public string PasswordHash { get; set; }

@@ -36,7 +36,7 @@ namespace Bank_API.DataAccessLayer.DataContext
                 .IsUnique();
 
             modelBuilder.Entity<User>()
-                .HasIndex(e => e.PhoneNumber)
+                .HasIndex(e => e.Phone)
                 .IsUnique();
         }
     }
