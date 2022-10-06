@@ -16,7 +16,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
-builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<IAuthService, AuthService>();
+
+builder.Services.AddScoped<ITokenService, TokenService>();  
+
+builder.Services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 var app = builder.Build();
 
@@ -35,7 +39,7 @@ app.MapControllers();
 
 using var serviceScope = app.Services.GetRequiredService<IServiceScopeFactory>().CreateScope();
 using var context = serviceScope.ServiceProvider.GetRequiredService<AppDataContext>();
-context.Database.EnsureCreated();
-context.Database.Migrate();
+//context.Database.EnsureCreated();
+//context.Database.Migrate();
 
 app.Run();
