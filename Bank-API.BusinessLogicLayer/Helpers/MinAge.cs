@@ -10,14 +10,11 @@ namespace Bank_API.BusinessLogicLayer.Helpers
         {
             var user = (RegistrationRequest)validationContext.ObjectInstance;
 
-            if (user.BirthDate == null)
-                return new ValidationResult("Date of Birth is required.");
-
             var age = DateTime.Today.Year - DateTime.Parse(user.BirthDate).Year;
 
             return (age >= 18)
                 ? ValidationResult.Success
-                : new ValidationResult("User should be at least 18 years old.");
+                : new ValidationResult(ErrorMessage = "User should be at least 18 years old.");
         }
     }
 }

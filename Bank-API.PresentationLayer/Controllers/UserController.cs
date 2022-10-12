@@ -28,10 +28,10 @@ namespace Bank_API.PresentationLayer.Controllers
 
             if(token == null)
             {
-                return StatusCode(403, "User already exists");
+                return StatusCode(403, new { error = "User already exists"});
             }
 
-            return StatusCode(201, token);
+            return StatusCode(201, new { token = token });
         }
     }
 }
