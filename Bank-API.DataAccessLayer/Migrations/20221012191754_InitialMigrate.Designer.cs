@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Bank_API.DataAccessLayer.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20221012142333_InitialMigrate")]
+    [Migration("20221012191754_InitialMigrate")]
     partial class InitialMigrate
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)

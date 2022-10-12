@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bank_API.BusinessLogicLayer.Helpers;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bank_API.BusinessLogicLayer.Models
@@ -29,6 +30,7 @@ namespace Bank_API.BusinessLogicLayer.Models
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
+        [MinAge]
         public string BirthDate { get; set; }
     }
 }

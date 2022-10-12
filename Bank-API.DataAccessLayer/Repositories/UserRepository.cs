@@ -22,7 +22,7 @@ namespace Bank_API.DataAccessLayer.Repositories
 
         public async Task<User> GetUserByEmailAndPhone(string email, string phone)
         {
-            return await data.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email && u.Phone == phone);
+            return await data.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email || u.Phone == phone);
         }
     }
 }

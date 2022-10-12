@@ -19,9 +19,14 @@ namespace Bank_API.PresentationLayer.Controllers
         [HttpPost("register")]
         public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
         {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest();
+            }
+
             var token = await authService.CreateUser(userRequest);
 
-            if (token == null)
+            if(token == null)
             {
                 return StatusCode(403, "User already exists");
             }

@@ -27,19 +27,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var credintials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            var claims = new[]
-            {
-                new Claim(ClaimTypes.Name, user.FirstName),
-                new Claim(ClaimTypes.Surname, user.LastName),
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.Phone)
-            };
-
-            var token = new JwtSecurityToken(configuration["Jwt:Issuer"],
-                configuration["Jwt:Audience"],
-                claims,
-                expires: DateTime.Now.AddDays(1),
-                signingCredentials: credintials);
+            var token = new JwtSecurityToken(expires: DateTime.Now.AddDays(1), signingCredentials: credintials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
