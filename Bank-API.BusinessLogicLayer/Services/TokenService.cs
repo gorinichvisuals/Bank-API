@@ -32,7 +32,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 new Claim(ClaimTypes.Name, user.FirstName),
                 new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.MobilePhone, user.Phone),
+                new Claim(ClaimTypes.MobilePhone, user.Phone)
             };
 
             var token = new JwtSecurityToken(configuration["Jwt:Issuer"],

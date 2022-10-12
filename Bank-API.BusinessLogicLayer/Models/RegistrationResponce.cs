@@ -29,7 +29,6 @@ namespace Bank_API.BusinessLogicLayer.Models
         [Required]
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
-        [DatabaseGenerated(DatabaseGeneratedOption.Computed)]
         public string BirthDate { get; set; }
     }
 }

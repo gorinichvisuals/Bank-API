@@ -17,6 +17,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         public async Task CreateUser(User user)
         {
             await data.Users.AddAsync(user);
+            await data.SaveChangesAsync();
         }
 
         public async Task<User> GetUserByEmailAndPhone(string email, string phone)

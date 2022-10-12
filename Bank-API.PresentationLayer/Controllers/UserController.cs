@@ -17,16 +17,16 @@ namespace Bank_API.PresentationLayer.Controllers
         }
 
         [HttpPost("register")]
-        public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest registrationRequest)
+        public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
         {
-            var token = await authService.CreateUser(registrationRequest);
+            var token = await authService.CreateUser(userRequest);
 
-            if (token != null)
+            if (token == null)
             {
-                return StatusCode(201, token);
+                return StatusCode(403, "User already exists");
             }
 
-            return StatusCode(403, "User already exist");
+            return StatusCode(201, token);
         }
     }
 }

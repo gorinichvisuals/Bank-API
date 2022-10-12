@@ -18,26 +18,28 @@ namespace Bank_API.DataAccessLayer.DataContext
         }
 
         public DbSet<User> Users { get; set; }
-
+        
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
-                optionsBuilder
-                    .UseSqlServer(@"Server=localhost\\SQLEXPRESS;Database=bank-api;Trusted_Connection=True")
-                    .UseSnakeCaseNamingConvention();
+                optionsBuilder.UseSqlServer(@"Server=localhost;Database=bankapi;Trusted_Connection=True");
             }
         }
-
+        
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<User>()
-                .HasIndex(e => e.Email)
+                .HasIndex(u => u.Email)
                 .IsUnique();
 
             modelBuilder.Entity<User>()
-                .HasIndex(e => e.Phone)
+                .HasIndex(u => u.Phone)
                 .IsUnique();
+
+            modelBuilder.Entity<User>()
+                .Property(u => u.CreatedAt)
+                .HasDefaultValueSql("getdate()");
         }
     }
 }

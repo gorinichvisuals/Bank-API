@@ -9,15 +9,13 @@ namespace Bank_API.BusinessLogicLayer.Services
     public class AuthService : IAuthService
     {
         private readonly IUserRepository<User> userRepository;
-        private readonly IUnitOfWork unitOfWork;
         private readonly ITokenService tokenService;
 
         public AuthService(IUserRepository<User> userRepository, 
-                           IUnitOfWork unitOfWork,
                            ITokenService tokenService)
         {
             this.userRepository = userRepository;
-            this.unitOfWork = unitOfWork;
+
             this.tokenService = tokenService;
         }
 
@@ -25,7 +23,7 @@ namespace Bank_API.BusinessLogicLayer.Services
         {
             var user = await userRepository.GetUserByEmailAndPhone(userRequest.Email, userRequest.Phone);
      
-            if (user != null)
+            if (user == null)
             {
                 if (AgeVerification(userRequest.BirthDate))
                 {
@@ -40,7 +38,6 @@ namespace Bank_API.BusinessLogicLayer.Services
                     };
 
                     await userRepository.CreateUser(createUser);
-                    await unitOfWork.Save();
 
                     var token = tokenService.GenerateAccessToken(createUser);
                     return token;
