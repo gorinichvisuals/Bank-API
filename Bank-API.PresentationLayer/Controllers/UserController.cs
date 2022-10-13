@@ -1,50 +1,37 @@
 ﻿using Bank_API.BusinessLogicLayer.Interfaces;
-using Bank_API.BusinessLogicLayer.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank_API.PresentationLayer.Controllers
 {
-    [Route("auth")]
+    [Route("user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IAuthService authService;
+        private IUserService userService;
 
-        public UserController(IAuthService authService)
+        public UserController(IUserService userService)
         {
-            this.authService = authService;
+            this.userService = userService;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
+        [HttpGet("personalInfo")]
+        public async Task<IActionResult> GetPersonalInfo(int userId)
         {
-            if (!ModelState.IsValid)
+            var user = await userService.GetUserById(userId);
+
+            if (user != null) 
             {
-                return BadRequest();
+                return StatusCode(200, new
+                {
+                    email = user.Email,
+                    phone = user.Phone,
+                    firstName = user.FirstName,
+                    lastName = user.LastName,
+                    birthDate = user.BirthDate
+                });
             }
 
-            var token = await authService.CreateUser(userRequest);
-
-            if(token == null)
-            {
-                return StatusCode(403, new { error = "User already exists"});
-            }
-
-            return StatusCode(201, new { token = token });
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest userRequest)
-        {
-            var token = await authService.Login(userRequest);
-
-            if (token == null)
-            {
-                return StatusCode(403, new { error = "Incorrect credentials" });
-            }
-
-            return StatusCode(201, new { token = token });
+            return StatusCode(404, "User not found");
         }
     }
 }

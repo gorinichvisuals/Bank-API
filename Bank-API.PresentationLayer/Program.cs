@@ -34,6 +34,7 @@ builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.U
 
 builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
 builder.Services.AddScoped<IAuthService, AuthService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();  
 
