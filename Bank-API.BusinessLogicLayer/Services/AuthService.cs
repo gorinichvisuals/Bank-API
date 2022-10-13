@@ -43,5 +43,18 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             return null;
         }
+
+        public async Task<string> Login(LoginRequest loginRequest)
+        {
+            var user = await userRepository.GetUserByPhone(loginRequest.Login);
+
+            if (user != null && Argon2.Verify(user.PasswordHash, loginRequest.Password))
+            {
+                var token = tokenService.GenerateAccessToken(user);
+                return token;
+            }
+
+            return null;
+        }
     }
 }

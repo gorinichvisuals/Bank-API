@@ -33,5 +33,18 @@ namespace Bank_API.PresentationLayer.Controllers
 
             return StatusCode(201, new { token = token });
         }
+
+        [HttpPost("login")]
+        public async Task<IActionResult> Login([FromBody] LoginRequest userRequest)
+        {
+            var token = await authService.Login(userRequest);
+
+            if (token == null)
+            {
+                return StatusCode(403, new { error = "Incorrect credentials" });
+            }
+
+            return StatusCode(201, new { token = token });
+        }
     }
 }
