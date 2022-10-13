@@ -4,6 +4,7 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
 {
     public interface IAuthService
     {
-        public Task<string> CreateUser(RegistrationRequest user);
+        public Task<string> CreateUser(RegistrationRequest userRequest);
+        public Task<string> Login(LoginRequest userRequest);
     }
 }

@@ -4,5 +4,6 @@
     {
         public Task CreateUser(T user);
         public Task<T> GetUserByEmailAndPhone(string email, string phone);
+        public Task<T> GetUserByPhone(string phone);    
     }
 }
