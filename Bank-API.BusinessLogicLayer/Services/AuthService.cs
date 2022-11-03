@@ -32,7 +32,8 @@ namespace Bank_API.BusinessLogicLayer.Services
                     Email = userRequest.Email,
                     PasswordHash = Argon2.Hash(userRequest.Password),
                     Phone = userRequest.Phone,
-                    BirthDate = DateTime.Parse(userRequest.BirthDate)
+                    BirthDate = DateTime.Parse(userRequest.BirthDate),
+                    Role = "User",
                 };
 
                 await userRepository.CreateUser(createUser);

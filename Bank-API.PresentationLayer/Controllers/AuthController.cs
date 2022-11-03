@@ -1,6 +1,6 @@
 ﻿using Bank_API.BusinessLogicLayer.Interfaces;
 using Bank_API.BusinessLogicLayer.Models;
-using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank_API.PresentationLayer.Controllers
@@ -16,14 +16,11 @@ namespace Bank_API.PresentationLayer.Controllers
             this.authService = authService;
         }
 
-        [HttpPost("register")]
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("register")]
         public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
         {
-            if (!ModelState.IsValid)
-            {
-                return BadRequest();
-            }
-
             var token = await authService.CreateUser(userRequest);
 
             if(token == null)
@@ -34,7 +31,9 @@ namespace Bank_API.PresentationLayer.Controllers
             return StatusCode(201, new { token = token });
         }
 
-        [HttpPost("login")]
+        [AllowAnonymous]
+        [HttpPost]
+        [Route("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest userRequest)
         {
             var token = await authService.Login(userRequest);

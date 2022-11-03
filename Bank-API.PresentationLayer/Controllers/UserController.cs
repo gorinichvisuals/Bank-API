@@ -1,4 +1,8 @@
 ﻿using Bank_API.BusinessLogicLayer.Interfaces;
+using Bank_API.DataAccessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank_API.PresentationLayer.Controllers
@@ -14,24 +18,26 @@ namespace Bank_API.PresentationLayer.Controllers
             this.userService = userService;
         }
 
-        [HttpGet("personalInfo")]
-        public async Task<IActionResult> GetPersonalInfo(int userId)
-        {
-            var user = await userService.GetUserById(userId);
+        [HttpGet]
+        [Route("personalInfo")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetPersonalInfo()
+        {            
+            var currentUser = await userService.GetUser();
 
-            if (user != null) 
+            if (currentUser != null)
             {
                 return StatusCode(200, new
                 {
-                    email = user.Email,
-                    phone = user.Phone,
-                    firstName = user.FirstName,
-                    lastName = user.LastName,
-                    birthDate = user.BirthDate
+                    email = currentUser.Email,
+                    phone = currentUser.Phone,
+                    firstName = currentUser.FirstName,
+                    lastName = currentUser.LastName,
+                    birthDate = currentUser.BirthDate
                 });
             }
 
-            return StatusCode(404, "User not found");
+            return StatusCode(401, new { error = "Unauthorize" });
         }
     }
 }

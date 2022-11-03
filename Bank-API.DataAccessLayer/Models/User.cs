@@ -42,5 +42,8 @@ namespace Bank_API.DataAccessLayer.Models
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         [Required]
         public DateTime BirthDate { get; set; }
+
+        [Required]
+        public string Role { get; set; }
     }
 }

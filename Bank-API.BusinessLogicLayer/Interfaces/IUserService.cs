@@ -4,6 +4,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
 {
     public interface IUserService
     {
-        Task<User> GetUserById(int userId);
+        public Task<User> GetUser();
     }
 }
