@@ -2,12 +2,13 @@
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Bank_API.DataAccessLayer.Repositories
 {
     public class UserRepository : IUserRepository<User>
     {
-        private AppDataContext data;
+        private readonly AppDataContext data;
 
         public UserRepository(AppDataContext data)
         {
@@ -16,23 +17,23 @@ namespace Bank_API.DataAccessLayer.Repositories
 
         public async Task CreateUser(User user)
         {
-            await data.Users.AddAsync(user);
+            await data.Users!.AddAsync(user);
             await data.SaveChangesAsync();
         }
 
-        public async Task<User> GetUserByEmailAndPhone(string email, string phone)
+        public async Task<User?> GetUserByEmailAndPhone(string? email, string? phone)
         {
-            return await data.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email || u.Phone == phone);
+            return await data.Users!.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email || u.Phone == phone);
         }
 
-        public async Task<User> GetUserByPhone(string userPhone)
+        public async Task<User?> GetUserByPhone(string? phone)
         {
-            return await data.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Phone == userPhone);
+            return await data.Users!.AsNoTracking().FirstOrDefaultAsync(u => u.Phone == phone);
         }
 
-        public async Task<User> GetUserById(int userId)
+        public async Task<User?> GetUserByEmail(string? email)
         {
-            return await data.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
+            return await data.Users!.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email);
         }
     }
 }

@@ -23,11 +23,10 @@ namespace Bank_API.BusinessLogicLayer.Services
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(configuration["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
-            //var claims = new Claim("Id", user.Id.ToString()).ToString();
             var claims = new[]
             {
-                new Claim(ClaimTypes.Role, user.Role),
-                new Claim(ClaimTypes.Email, user.Email)
+                new Claim(ClaimTypes.Role, user.Role!),
+                new Claim(ClaimTypes.Email, user.Email!)
             };
 
             var token = new JwtSecurityToken(configuration["Jwt:Issuer"],
@@ -43,7 +42,7 @@ namespace Bank_API.BusinessLogicLayer.Services
         {
             var random = new byte[64];
 
-            using (var rand = RandomNumberGenerator.Create())
+            using var rand = RandomNumberGenerator.Create();
             {
                 rand.GetBytes(random);
                 return Convert.ToBase64String(random);

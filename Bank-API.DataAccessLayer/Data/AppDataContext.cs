@@ -1,6 +1,6 @@
 ﻿using Bank_API.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
+using System.Diagnostics.CodeAnalysis;
 
 namespace Bank_API.DataAccessLayer.DataContext
 {
@@ -17,7 +17,7 @@ namespace Bank_API.DataAccessLayer.DataContext
             
         }
 
-        public DbSet<User> Users { get; set; }
+        public DbSet<User>? Users { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {

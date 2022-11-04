@@ -3,8 +3,8 @@
     public interface IUserRepository<T>
     {
         public Task CreateUser(T user);
-        public Task<T> GetUserByEmailAndPhone(string userEmail, string userPhone);
-        public Task<T> GetUserByPhone(string userPhone);
-        public Task<T> GetUserById(int userId);    
+        public Task<T?> GetUserByEmailAndPhone(string email, string phone);
+        public Task<T?> GetUserByPhone(string phone);
+        public Task<T?> GetUserByEmail(string email);    
     }
 }

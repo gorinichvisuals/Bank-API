@@ -19,22 +19,22 @@ namespace Bank_API.BusinessLogicLayer.Services
             this.httpContextAccessor = httpContextAccessor;
         }
 
-        public async Task<User> GetUser()
+        public async Task<User?> GetUser()
         {
-            var user = await GetAuthenticateUser();
+            var user = GetAuthenticateUser();
 
             if (user != null)
             {
-                var userData = await userRepository.GetUserByEmailAndPhone(user.Email, "");
+                var userData = await userRepository.GetUserByEmail(user.Email!);
                 return userData;
             }
 
             return null;
         }
 
-        private async Task<User> GetAuthenticateUser()
+        private User? GetAuthenticateUser()
         {
-            var identity = httpContextAccessor.HttpContext.User.Identity as ClaimsIdentity;
+            var identity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
 
             if (identity != null)
             {
@@ -42,7 +42,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
                 return new User
                 {
-                    Email = identityClaim.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value,
+                    Email = identityClaim.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
                     Role = identityClaim.FirstOrDefault(c=> c.Type == ClaimTypes.Role)?.Value
                 };
             }
