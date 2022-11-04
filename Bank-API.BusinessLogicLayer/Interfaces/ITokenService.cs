@@ -4,7 +4,7 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
 {
     public interface ITokenService
     {
-        public string GenerateAccessToken(User user);
-        public string GenerateRefreshToken();
+        public string? GenerateAccessToken(User user);
+        public string? GenerateRefreshToken();
     }
 }

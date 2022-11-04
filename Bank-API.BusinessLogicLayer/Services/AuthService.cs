@@ -19,9 +19,9 @@ namespace Bank_API.BusinessLogicLayer.Services
             this.tokenService = tokenService;
         }
 
-        public async Task<string> CreateUser(RegistrationRequest userRequest)
+        public async Task<string?> CreateUser(RegistrationRequest userRequest)
         {
-            var user = await userRepository.GetUserByEmailAndPhone(userRequest.Email, userRequest.Phone);
+            var user = await userRepository.GetUserByEmailAndPhone(userRequest.Email!, userRequest.Phone!);
 
             if (user == null)
             {
@@ -30,9 +30,10 @@ namespace Bank_API.BusinessLogicLayer.Services
                     FirstName = userRequest.FirstName,
                     LastName = userRequest.LastName,
                     Email = userRequest.Email,
-                    PasswordHash = Argon2.Hash(userRequest.Password),
+                    PasswordHash = Argon2.Hash(userRequest.Password!),
                     Phone = userRequest.Phone,
-                    BirthDate = DateTime.Parse(userRequest.BirthDate)
+                    BirthDate = DateTime.Parse(userRequest.BirthDate!),
+                    Role = "User",
                 };
 
                 await userRepository.CreateUser(createUser);
@@ -44,11 +45,11 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<string> Login(LoginRequest loginRequest)
+        public async Task<string?> Login(LoginRequest loginRequest)
         {
-            var user = await userRepository.GetUserByPhone(loginRequest.Login);
+            var user = await userRepository.GetUserByPhone(loginRequest.Login!);
 
-            if (user != null && Argon2.Verify(user.PasswordHash, loginRequest.Password))
+            if (user != null && Argon2.Verify(user.PasswordHash!, loginRequest.Password!))
             {
                 var token = tokenService.GenerateAccessToken(user);
                 return token;

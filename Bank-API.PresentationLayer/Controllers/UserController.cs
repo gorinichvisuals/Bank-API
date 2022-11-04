@@ -1,50 +1,43 @@
 ﻿using Bank_API.BusinessLogicLayer.Interfaces;
-using Bank_API.BusinessLogicLayer.Models;
+using Bank_API.DataAccessLayer.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Bank_API.PresentationLayer.Controllers
 {
-    [Route("auth")]
+    [Route("user")]
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IAuthService authService;
+        private IUserService userService;
 
-        public UserController(IAuthService authService)
+        public UserController(IUserService userService)
         {
-            this.authService = authService;
+            this.userService = userService;
         }
 
-        [HttpPost("register")]
-        public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
-        {
-            if (!ModelState.IsValid)
+        [HttpGet]
+        [Route("personalInfo")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetPersonalInfo()
+        {            
+            var currentUser = await userService.GetUser();
+
+            if (currentUser != null)
             {
-                return BadRequest();
+                return StatusCode(200, new
+                {
+                    email = currentUser.Email,
+                    phone = currentUser.Phone,
+                    firstName = currentUser.FirstName,
+                    lastName = currentUser.LastName,
+                    birthDate = currentUser.BirthDate
+                });
             }
 
-            var token = await authService.CreateUser(userRequest);
-
-            if(token == null)
-            {
-                return StatusCode(403, new { error = "User already exists"});
-            }
-
-            return StatusCode(201, new { token = token });
-        }
-
-        [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest userRequest)
-        {
-            var token = await authService.Login(userRequest);
-
-            if (token == null)
-            {
-                return StatusCode(403, new { error = "Incorrect credentials" });
-            }
-
-            return StatusCode(201, new { token = token });
+            return StatusCode(401, new { error = "Unauthorize" });
         }
     }
 }
