@@ -1,4 +1,5 @@
 ﻿using Bank_API.BusinessLogicLayer.Interfaces;
+using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -38,6 +39,15 @@ namespace Bank_API.PresentationLayer.Controllers
             }
 
             return StatusCode(401, new { error = "Unauthorize" });
+        }
+
+        [HttpPut]
+        [Route("personalInfo")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> UpdateUser([FromBody] UserUpdateRequest updateUserRequest)
+        {
+            await userService.UpdateUser(updateUserRequest);
+            return StatusCode(201);
         }
     }
 }

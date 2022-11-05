@@ -2,7 +2,7 @@
 
 namespace Bank_API.BusinessLogicLayer.Models
 {
-    public class LoginRequest
+    public class UserLoginRequest
     {
         [Required]
         [StringLength(16, MinimumLength = 1)]

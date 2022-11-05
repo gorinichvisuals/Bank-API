@@ -19,7 +19,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             this.tokenService = tokenService;
         }
 
-        public async Task<string?> CreateUser(RegistrationRequest userRequest)
+        public async Task<string?> CreateUser(UserRegistrationRequest userRequest)
         {
             var user = await userRepository.GetUserByEmailAndPhone(userRequest.Email!, userRequest.Phone!);
 
@@ -45,7 +45,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<string?> Login(LoginRequest loginRequest)
+        public async Task<string?> Login(UserLoginRequest loginRequest)
         {
             var user = await userRepository.GetUserByPhone(loginRequest.Login!);
 

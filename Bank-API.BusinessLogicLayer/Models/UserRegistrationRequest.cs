@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Bank_API.BusinessLogicLayer.Models
 {
-    public class RegistrationRequest
+    public class UserRegistrationRequest
     {
         [Required]
         [EmailAddress]

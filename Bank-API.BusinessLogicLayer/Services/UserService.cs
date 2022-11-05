@@ -2,6 +2,7 @@
 using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
+using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Http;
 using System.Security.Claims;
 
@@ -30,6 +31,28 @@ namespace Bank_API.BusinessLogicLayer.Services
             }
 
             return null;
+        }
+
+        public async Task UpdateUser(UserUpdateRequest updateUserRequest)
+        {
+            var authenticateUser = GetAuthenticateUser();
+
+            if(authenticateUser != null)
+            {
+                var user = await userRepository.GetUserByEmail(authenticateUser.Email!);
+
+                if (user != null)
+                {
+                    user.Phone = updateUserRequest.Phone;
+                    user.FirstName = updateUserRequest.FirstName;
+                    user.LastName = updateUserRequest.LastName;
+                    user.BirthDate = DateTime.Parse(updateUserRequest.BirthDate!);
+                    user.PasswordHash = Argon2.Hash(updateUserRequest.Password!);
+                    user.UpdatedAt = DateTime.Now;
+                }
+
+                await userRepository.UpdateUser(user!);
+            }
         }
 
         private User? GetAuthenticateUser()
