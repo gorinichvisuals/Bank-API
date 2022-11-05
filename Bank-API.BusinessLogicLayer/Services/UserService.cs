@@ -4,6 +4,7 @@ using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Isopoh.Cryptography.Argon2;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.JsonPatch;
 using System.Security.Claims;
 
 namespace Bank_API.BusinessLogicLayer.Services
@@ -32,7 +33,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             return null;
         }
-
+        
         public async Task UpdateUser(UserUpdateRequest updateUserRequest)
         {
             var authenticateUser = GetAuthenticateUser();
@@ -43,18 +44,39 @@ namespace Bank_API.BusinessLogicLayer.Services
 
                 if (user != null)
                 {
-                    user.Phone = updateUserRequest.Phone;
-                    user.FirstName = updateUserRequest.FirstName;
-                    user.LastName = updateUserRequest.LastName;
-                    user.BirthDate = DateTime.Parse(updateUserRequest.BirthDate!);
-                    user.PasswordHash = Argon2.Hash(updateUserRequest.Password!);
+                    user.Phone = 
+                        updateUserRequest.Phone != null 
+                        ? updateUserRequest.Phone 
+                        : user.Phone;
+
+                    user.FirstName = 
+                        updateUserRequest.FirstName != null 
+                        ? updateUserRequest.FirstName 
+                        : user.FirstName;
+
+                    user.LastName = 
+                        updateUserRequest.LastName != null 
+                        ? updateUserRequest.LastName 
+                        : user.LastName;
+
+                    user.BirthDate = 
+                        updateUserRequest.BirthDate! != null 
+                        ? DateTime.Parse(updateUserRequest.BirthDate!) 
+                        : user.BirthDate;
+
+                    user.PasswordHash = 
+                        updateUserRequest.Password != null 
+                        ? Argon2.Hash(updateUserRequest.Password!) 
+                        : user.PasswordHash;
+
                     user.UpdatedAt = DateTime.Now;
                 }
 
                 await userRepository.UpdateUser(user!);
             }
+           
         }
-
+       
         private User? GetAuthenticateUser()
         {
             var identity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
