@@ -9,9 +9,12 @@ namespace Bank_API.BusinessLogicLayer.Helpers
     {
         protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
         {
-            var user = (RegistrationRequest)validationContext.ObjectInstance;
-
-            var age = DateTime.Today.Year - DateTime.Parse(user.BirthDate!).Year;
+            if (value == null)
+            {
+                return null;
+            }
+            
+            var age = DateTime.Now.Year - Convert.ToDateTime(value).Year;
 
             return (age >= 18)
                 ? ValidationResult.Success

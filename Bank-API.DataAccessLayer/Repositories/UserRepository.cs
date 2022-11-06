@@ -21,6 +21,12 @@ namespace Bank_API.DataAccessLayer.Repositories
             await data.SaveChangesAsync();
         }
 
+        public async Task UpdateUser(User user)
+        {
+            data.Users?.Update(user);
+            await data.SaveChangesAsync();
+        }
+
         public async Task<User?> GetUserByEmailAndPhone(string? email, string? phone)
         {
             return await data.Users!.AsNoTracking().FirstOrDefaultAsync(u => u.Email == email || u.Phone == phone);

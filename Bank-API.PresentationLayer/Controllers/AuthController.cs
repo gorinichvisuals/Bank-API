@@ -19,7 +19,7 @@ namespace Bank_API.PresentationLayer.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("register")]
-        public async Task<IActionResult> CreateUser([FromBody] RegistrationRequest userRequest)
+        public async Task<IActionResult> CreateUser([FromBody] UserRegistrationRequest userRequest)
         {
             var token = await authService.CreateUser(userRequest);
 
@@ -34,7 +34,7 @@ namespace Bank_API.PresentationLayer.Controllers
         [AllowAnonymous]
         [HttpPost]
         [Route("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest userRequest)
+        public async Task<IActionResult> Login([FromBody] UserLoginRequest userRequest)
         {
             var token = await authService.Login(userRequest);
 

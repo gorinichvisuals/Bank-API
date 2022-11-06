@@ -1,6 +1,5 @@
 ﻿using Bank_API.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
-using System.Diagnostics.CodeAnalysis;
 
 namespace Bank_API.DataAccessLayer.DataContext
 {
