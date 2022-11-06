@@ -7,8 +7,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
     public interface IUserService
     {
         public Task<User?> GetUser();
-        //public Task UpdateUser(JsonPatchDocument<User> userUpdateRequest);
         public Task UpdateUser(UserUpdateRequest userUpdateRequest);
-
     }
 }

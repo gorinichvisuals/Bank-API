@@ -13,6 +13,7 @@ namespace Bank_API.BusinessLogicLayer.Models
         [StringLength(16, MinimumLength = 1)]
         public string? Phone { get; set; }
 
+        [StringLength(64, MinimumLength = 1)]
         public string? Password { get; set; }
 
         [StringLength(64, MinimumLength = 1)]
