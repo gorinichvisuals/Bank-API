@@ -1,6 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using System.ComponentModel.DataAnnotations;
 
 namespace Bank_API.DataAccessLayer.Models
 {
@@ -45,5 +43,7 @@ namespace Bank_API.DataAccessLayer.Models
 
         [Required]
         public string? Role { get; set; }
+
+        public ICollection<Card>? Cards { get; set; }
     }
 }
