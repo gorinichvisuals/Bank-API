@@ -42,16 +42,26 @@ namespace Bank_API.DataAccessLayer.DataContext
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Card>()
-                .HasIndex(u => u.Number)
+                .HasIndex(c => c.Number)
                 .IsUnique();
 
             modelBuilder.Entity<Card>()
-                .Property(u => u.CreatedAt)
+                .Property(c => c.CreatedAt)
                 .HasDefaultValueSql("getdate()");
 
             modelBuilder.Entity<Card>()
-                .Property(u => u.UpdatedAt)
+                .Property(c => c.UpdatedAt)
                 .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.Currency)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.Status)
+                .HasConversion<int>();
+            
+            base.OnModelCreating(modelBuilder); 
         }
     }
 }

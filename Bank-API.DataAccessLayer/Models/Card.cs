@@ -1,22 +1,8 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
+﻿using Bank_API.DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bank_API.DataAccessLayer.Models
 {
-    public enum Currency
-    {
-        UAH,
-        USD,
-        EUR
-    }
-
-    public enum CardStatus
-    {
-        Active,
-        Closed,
-        Frozen
-    }
-
     public class Card
     {
         [Key]
