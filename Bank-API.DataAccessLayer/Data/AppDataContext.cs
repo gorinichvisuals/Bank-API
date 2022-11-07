@@ -17,6 +17,7 @@ namespace Bank_API.DataAccessLayer.DataContext
         }
 
         public DbSet<User>? Users { get; set; }
+        public DbSet<Card>? Cards { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -39,6 +40,28 @@ namespace Bank_API.DataAccessLayer.DataContext
             modelBuilder.Entity<User>()
                 .Property(u => u.CreatedAt)
                 .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Card>()
+                .HasIndex(c => c.Number)
+                .IsUnique();
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.UpdatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.Currency)
+                .HasConversion<int>();
+
+            modelBuilder.Entity<Card>()
+                .Property(c => c.Status)
+                .HasConversion<int>();
+            
+            base.OnModelCreating(modelBuilder); 
         }
     }
 }
