@@ -3,27 +3,24 @@ using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Isopoh.Cryptography.Argon2;
-using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.JsonPatch;
-using System.Security.Claims;
 
 namespace Bank_API.BusinessLogicLayer.Services
 {
     public class UserService : IUserService
     {
         private readonly IUserRepository<User> userRepository;
-        private readonly IHttpContextAccessor httpContextAccessor;
+        private readonly IAuthService authService;
 
-        public UserService(IUserRepository<User> userRepository,
-                           IHttpContextAccessor httpContextAccessor)
+        public UserService(IUserRepository<User> userRepository, 
+                           IAuthService authService)
         {
             this.userRepository = userRepository;
-            this.httpContextAccessor = httpContextAccessor;
+            this.authService = authService;
         }
 
         public async Task<User?> GetUser()
         {
-            var user = GetAuthenticateUser();
+            var user = authService.GetAuthenticateUser();
 
             if (user != null)
             {
@@ -36,7 +33,7 @@ namespace Bank_API.BusinessLogicLayer.Services
         
         public async Task UpdateUser(UserUpdateRequest updateUserRequest)
         {
-            var authenticateUser = GetAuthenticateUser();
+            var authenticateUser = authService.GetAuthenticateUser();
 
             if(authenticateUser != null)
             {
@@ -73,26 +70,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 }
 
                 await userRepository.UpdateUser(user!);
-            }
-           
-        }
-       
-        private User? GetAuthenticateUser()
-        {
-            var identity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
-
-            if (identity != null)
-            {
-                var identityClaim = identity.Claims;
-
-                return new User
-                {
-                    Email = identityClaim.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
-                    Role = identityClaim.FirstOrDefault(c=> c.Type == ClaimTypes.Role)?.Value
-                };
-            }
-
-            return null;
-        }
+            }          
+        }      
     }
 }

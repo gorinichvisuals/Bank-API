@@ -38,8 +38,11 @@ var connectionString = builder.Configuration.GetConnectionString("DefaultConnect
 builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.UseSqlServer(connectionString));
 
 builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
+builder.Services.AddScoped<ICardRepository<Card>, CardRepository>();
+
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
+builder.Services.AddScoped<ICardService, CardService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();  
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
