@@ -22,7 +22,10 @@ namespace Bank_API.DataAccessLayer.Repositories
 
         public async Task<Card?> GetLastCard()
         {
-            return await data.Cards!.AsNoTracking().OrderBy(c=>c.Number).LastOrDefaultAsync();
+            return await data.Cards!
+                .AsNoTracking()
+                .OrderBy(c=>c.Number)
+                .LastOrDefaultAsync();
         }
     }
 }

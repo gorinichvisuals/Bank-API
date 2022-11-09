@@ -3,6 +3,7 @@ using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
+using Microsoft.Extensions.Configuration;
 
 namespace Bank_API.BusinessLogicLayer.Services
 {
@@ -11,14 +12,17 @@ namespace Bank_API.BusinessLogicLayer.Services
         private readonly ICardRepository<Card> cardRepository;
         private readonly IAuthService authService;
         private readonly IUserRepository<User> userRepository;
+        private readonly IConfiguration configuration;
 
         public CardService(ICardRepository<Card> cardRepository, 
                            IAuthService authService,
-                           IUserRepository<User> userRepository)
+                           IUserRepository<User> userRepository,
+                           IConfiguration configuration)
         {
             this.cardRepository = cardRepository;
             this.authService = authService;
             this.userRepository = userRepository;
+            this.configuration = configuration;
         }
 
         public async Task<int?> CreateCard(CardCreateRequest cardRequest)
@@ -48,16 +52,16 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         private async Task<long?> GetNumber()
         {
-            long start = 4141562365230001;
-            long count = 1;
+            long number = (long)configuration.GetSection("Card").Get<Card>().Number!;
+
             var card = await cardRepository.GetLastCard();
 
-            card!.Number =
-                 card.Number != null 
-                ? card.Number + count 
-                : start;
+            if (card != null)
+            {
+                number = (long)(card!.Number! + 1);
+            }
 
-            return card.Number;
+            return number;
         }
     }
 }

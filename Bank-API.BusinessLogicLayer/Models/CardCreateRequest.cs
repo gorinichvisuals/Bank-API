@@ -6,7 +6,7 @@ namespace Bank_API.BusinessLogicLayer.Models
     public class CardCreateRequest
     {
         [Required]
-        [CurencyValAttribute]
+        [CurrencyValAttribute]
         public string? Currency { get; set; }
     }
 }
