@@ -22,5 +22,10 @@
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="6.0.10" />
 		<PackageReference Include="Microsoft.AspNetCore.JsonPatch" Version="6.0.10" />
 	</ItemGroup>
+	
+	<PropertyGroup>
+	  <GenerateDocumentationFile>true</GenerateDocumentationFile>
+		<NoWarn>$(NoWarn);1591</NoWarn>
+	</PropertyGroup>
 
 </Project>

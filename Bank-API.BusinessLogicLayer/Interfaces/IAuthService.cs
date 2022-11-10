@@ -1,4 +1,5 @@
 ﻿using Bank_API.BusinessLogicLayer.Models;
+using Bank_API.DataAccessLayer.Models;
 
 namespace Bank_API.BusinessLogicLayer.Interfaces
 {
@@ -6,5 +7,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
     {
         public Task<string?> CreateUser(UserRegistrationRequest userRequest);
         public Task<string?> Login(UserLoginRequest userRequest);
+        public User? GetAuthenticateUser();
     }
 }

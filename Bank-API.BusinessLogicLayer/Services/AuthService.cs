@@ -3,7 +3,8 @@ using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Isopoh.Cryptography.Argon2;
-using System.Net;
+using Microsoft.AspNetCore.Http;
+using System.Security.Claims;
 
 namespace Bank_API.BusinessLogicLayer.Services
 {
@@ -11,12 +12,15 @@ namespace Bank_API.BusinessLogicLayer.Services
     {
         private readonly IUserRepository<User> userRepository;
         private readonly ITokenService tokenService;
+        private readonly IHttpContextAccessor httpContextAccessor;
 
         public AuthService(IUserRepository<User> userRepository, 
-                           ITokenService tokenService)
+                           ITokenService tokenService,
+                           IHttpContextAccessor httpContextAccessor)
         {
             this.userRepository = userRepository;
             this.tokenService = tokenService;
+            this.httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<string?> CreateUser(UserRegistrationRequest userRequest)
@@ -53,6 +57,24 @@ namespace Bank_API.BusinessLogicLayer.Services
             {
                 var token = tokenService.GenerateAccessToken(user);
                 return token;
+            }
+
+            return null;
+        }
+
+        public User? GetAuthenticateUser()
+        {
+            var identity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
+
+            if (identity != null)
+            {
+                var identityClaim = identity.Claims;
+
+                return new User
+                {
+                    Email = identityClaim.FirstOrDefault(c => c.Type == ClaimTypes.Email)?.Value,
+                    Role = identityClaim.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value
+                };
             }
 
             return null;
