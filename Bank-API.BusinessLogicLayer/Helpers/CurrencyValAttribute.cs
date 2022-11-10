@@ -7,7 +7,10 @@ namespace Bank_API.BusinessLogicLayer.Helpers
     {
         public override bool IsValid(object? value)
         {
-            return Enum.IsDefined(typeof(Currency), value!);
+            if(value != null)
+                return Enum.IsDefined(typeof(Currency), value!);
+
+            return false;
         }
     }
 }

@@ -20,6 +20,23 @@ namespace Bank_API.PresentationLayer.Controllers
             this.userService = userService;
         }
 
+        /// <summary>
+        /// Get personal info for user.
+        /// </summary>
+        /// <remarks>
+        /// Sample responce:
+        ///
+        ///     GET /Bank API
+        ///     {
+        ///         "email": "user@example.com"
+        ///         "phone": "+380505553535"(in string format),
+        ///         "FirstName":"String",
+        ///         "LastName": "String",
+        ///         "BirthDate": "2020-10-19"
+        ///     }
+        /// </remarks>
+        /// <response code="200">Returns information about the user</response>
+        /// <response code="401">If the user is not authorized</response>
         [HttpGet]
         [Route("personalInfo")]
         [Authorize(Roles = "User")]
@@ -42,6 +59,22 @@ namespace Bank_API.PresentationLayer.Controllers
             return StatusCode(401, new { error = "Unauthorize" });
         }
 
+        /// <summary>
+        /// Update personal info for user.
+        /// </summary>
+        /// <remarks>
+        /// Sample responce:
+        ///
+        ///     PUT /Bank API(All parameters are optional so if parameter is not provided then it should not be changed in the database)
+        ///     {
+        ///         "phone": "+380505553535"(in string format),
+        ///         "FirstName":"String",
+        ///         "LastName": "String",
+        ///         "BirthDate": "2020-10-19",
+        ///         "Password": "string"
+        ///     }
+        /// </remarks>
+        /// <response code="201">The request has succeeded and has led to the update of a resource.</response>
         [HttpPut]
         [Route("personalInfo")]
         [Authorize(Roles = "User")]

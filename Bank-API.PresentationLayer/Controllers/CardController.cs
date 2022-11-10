@@ -16,6 +16,19 @@ namespace Bank_API.PresentationLayer.Controllers
             this.cardService = cardService;
         }
 
+        /// <summary>
+        /// Create a new user card.
+        /// </summary>
+        /// <remarks>
+        /// Sample request:
+        ///
+        ///     POST /Bank API
+        ///     {
+        ///        "currency": "string"(UAH/USD/EUR),
+        ///     }
+        /// </remarks>
+        /// <response code="201">Returns the newly created item by id</response>
+        /// <response code="400">If no card has been created</response>
         [HttpPost]
         [Authorize(Roles = "User")]
         public async Task<IActionResult> CreateCard([FromBody] CardCreateRequest request)
