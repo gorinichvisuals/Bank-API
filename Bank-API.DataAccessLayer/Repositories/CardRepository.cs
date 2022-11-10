@@ -1,4 +1,5 @@
 ﻿using Bank_API.DataAccessLayer.DataContext;
+using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Microsoft.EntityFrameworkCore;
@@ -26,6 +27,14 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .AsNoTracking()
                 .OrderBy(c=>c.Number)
                 .LastOrDefaultAsync();
+        }
+
+        public async Task<ICollection<Card>?> GetUserCards(int? userId, Currency currency)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.UserId == userId && c.Currency == currency)
+                .ToListAsync();
         }
     }
 }

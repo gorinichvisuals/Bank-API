@@ -27,7 +27,7 @@ namespace Bank_API.PresentationLayer.Controllers
                 return StatusCode(201, new { id = cardId });
             }
 
-            return StatusCode(400, new { error = "Bad request" });
+            return StatusCode(400, new { error = "Card not created. You can have only 2 cards of same currency." });
         }
     }
 }

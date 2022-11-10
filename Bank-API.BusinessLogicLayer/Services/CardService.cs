@@ -29,8 +29,9 @@ namespace Bank_API.BusinessLogicLayer.Services
         {
             var authenticateUser = authService.GetAuthenticateUser();
             var user = await userRepository.GetUserByEmail(authenticateUser!.Email!);
+            var sameCurrencyCards = await cardRepository.GetUserCards(user!.Id, (Currency)Enum.Parse(typeof(Currency), cardRequest.Currency!));
 
-            if(user != null && user.Cards!.Count < 2)
+            if(user != null && sameCurrencyCards!.Count < 2)
             {
                 var newCard = new Card
                 {
@@ -40,7 +41,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                     Number = await GetNumber(),
                     Exp = DateTime.Now.AddYears(6),
                     Currency = (Currency) Enum.Parse(typeof(Currency), cardRequest.Currency!),
-                    Status = DataAccessLayer.Enums.CardStatus.Active,
+                    Status = CardStatus.Active,
                 };
 
                 await cardRepository.CreateCard(newCard);
@@ -52,16 +53,12 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         private async Task<long?> GetNumber()
         {
-            long number = (long)configuration.GetSection("Card").Get<Card>().Number!;
-
+            long number = long.Parse(configuration["Card:GeneratorFirstNumber"]);
             var card = await cardRepository.GetLastCard();
 
-            if (card != null)
-            {
-                number = (long)(card!.Number! + 1);
-            }
-
-            return number;
+            return card != null ?
+                (card!.Number! + 1)
+                : number;
         }
     }
 }
