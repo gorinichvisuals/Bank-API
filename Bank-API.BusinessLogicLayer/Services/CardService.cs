@@ -1,9 +1,8 @@
-﻿using Bank_API.BusinessLogicLayer.Interfaces;
+using Bank_API.BusinessLogicLayer.Interfaces;
 using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
-using Bank_API.DataAccessLayer.Repositories;
 using Microsoft.Extensions.Configuration;
 
 namespace Bank_API.BusinessLogicLayer.Services

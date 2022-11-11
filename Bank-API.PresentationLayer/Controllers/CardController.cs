@@ -1,4 +1,4 @@
-﻿using Bank_API.BusinessLogicLayer.Interfaces;
+using Bank_API.BusinessLogicLayer.Interfaces;
 using Bank_API.BusinessLogicLayer.Models;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;

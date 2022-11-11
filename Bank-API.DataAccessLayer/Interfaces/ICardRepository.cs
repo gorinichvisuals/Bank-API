@@ -1,4 +1,4 @@
-﻿using Bank_API.DataAccessLayer.Enums;
+using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Models;
 
 namespace Bank_API.DataAccessLayer.Interfaces

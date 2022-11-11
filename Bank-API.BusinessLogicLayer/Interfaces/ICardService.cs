@@ -1,5 +1,4 @@
-﻿using Bank_API.BusinessLogicLayer.Models;
-using Bank_API.DataAccessLayer.Models;
+using Bank_API.BusinessLogicLayer.Models;
 
 namespace Bank_API.BusinessLogicLayer.Interfaces
 {
