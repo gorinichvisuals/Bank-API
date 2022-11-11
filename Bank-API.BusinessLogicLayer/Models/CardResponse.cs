@@ -2,7 +2,7 @@
 
 namespace Bank_API.BusinessLogicLayer.Models
 {
-    public class CardResponce
+    public class CardResponse
     {
         public int? Id { get; set; }
         public long? Number { get; set; }

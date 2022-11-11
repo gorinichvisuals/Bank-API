@@ -10,25 +10,22 @@ namespace Bank_API.BusinessLogicLayer.Services
     public class CardService : ICardService
     {
         private readonly ICardRepository<Card> cardRepository;
-        private readonly IAuthService authService;
-        private readonly IUserRepository<User> userRepository;
         private readonly IConfiguration configuration;
+        private readonly IUserService userService;
 
         public CardService(ICardRepository<Card> cardRepository, 
-                           IAuthService authService,
-                           IUserRepository<User> userRepository,
-                           IConfiguration configuration)
+                           IAuthService authService,                          
+                           IConfiguration configuration,
+                           IUserService userService)
         {
             this.cardRepository = cardRepository;
-            this.authService = authService;
-            this.userRepository = userRepository;
             this.configuration = configuration;
+            this.userService = userService;
         }
 
         public async Task<int?> CreateCard(CardCreateRequest cardRequest)
         {
-            var authenticateUser = authService.GetAuthenticateUser();
-            var user = await userRepository.GetUserByEmail(authenticateUser!.Email!);
+            var user = userService.GetUser();
             var sameCurrencyCards = await cardRepository.GetUserCards(user!.Id, (Currency)Enum.Parse(typeof(Currency), cardRequest.Currency!));
 
             if(user != null && sameCurrencyCards!.Count < 2)
@@ -51,33 +48,26 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<CardResponce[]?> GetUserCards()
+        public async Task<CardResponse[]?> GetUserCards()
         {
-            var authenticateUser = authService.GetAuthenticateUser();
-            var user = await userRepository.GetUserByEmail(authenticateUser!.Email!);
+            var user = userService.GetUser();
             var cards = await cardRepository.GetUserCardsById(user!.Id);
 
             if (cards != null)
             {
-                CardResponce[] cardsResponce = new CardResponce[cards.Length];
-
-                for (int i = 0; i < cards.Length; i++)
+                var arraysResponse = cards.Select(c => new CardResponse
                 {
-                    var cardResponce = new CardResponce
-                    {
-                        Id = cards[i].Id,
-                        Number = cards[i].Number,
-                        Exp = String.Format("{0:MM/yy}", cards[i].Exp),
-                        Cvv = cards[i].Cvv,
-                        Currency = cards[i].Currency.ToString(),
-                        Balance = cards[i].Balance,
-                        Status = cards[i].Status.ToString(),
-                    };
+                    Id = c.Id,
+                    Number = c.Number,
+                    Exp = String.Format("{0:MM/yy}", c.Exp),
+                    Cvv = c.Cvv,
+                    Currency = c.Currency.ToString(),
+                    Balance = c.Balance,
+                    Status = c.Status.ToString(),
+                })
+                    .ToArray();
 
-                    cardsResponce[i] = cardResponce;
-                }
-
-                return cardsResponce;
+                return arraysResponse;
             }
 
             return null;
