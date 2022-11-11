@@ -20,12 +20,12 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<User?> GetUser()
         {
-            var user = authService.GetAuthenticateUser();
+            var authenticateUser = authService.GetAuthenticateUser();
 
-            if (user != null)
+            if (authenticateUser != null)
             {
-                var userData = await userRepository.GetUserByEmail(user.Email!);
-                return userData;
+                var user = await userRepository.GetUserByEmail(authenticateUser.Email!);
+                return user;
             }
 
             return null;
@@ -33,44 +33,39 @@ namespace Bank_API.BusinessLogicLayer.Services
         
         public async Task UpdateUser(UserUpdateRequest updateUserRequest)
         {
-            var authenticateUser = authService.GetAuthenticateUser();
-
-            if(authenticateUser != null)
+            var user = await GetUser();
+            
+            if (user != null)
             {
-                var user = await userRepository.GetUserByEmail(authenticateUser.Email!);
+                user.Phone = 
+                    updateUserRequest.Phone != null 
+                    ? updateUserRequest.Phone 
+                    : user.Phone;
 
-                if (user != null)
-                {
-                    user.Phone = 
-                        updateUserRequest.Phone != null 
-                        ? updateUserRequest.Phone 
-                        : user.Phone;
+                user.FirstName = 
+                    updateUserRequest.FirstName != null 
+                    ? updateUserRequest.FirstName 
+                    : user.FirstName;
 
-                    user.FirstName = 
-                        updateUserRequest.FirstName != null 
-                        ? updateUserRequest.FirstName 
-                        : user.FirstName;
+                user.LastName = 
+                    updateUserRequest.LastName != null 
+                    ? updateUserRequest.LastName 
+                    : user.LastName;
 
-                    user.LastName = 
-                        updateUserRequest.LastName != null 
-                        ? updateUserRequest.LastName 
-                        : user.LastName;
+                user.BirthDate = 
+                    updateUserRequest.BirthDate! != null 
+                    ? DateTime.Parse(updateUserRequest.BirthDate!) 
+                    : user.BirthDate;
 
-                    user.BirthDate = 
-                        updateUserRequest.BirthDate! != null 
-                        ? DateTime.Parse(updateUserRequest.BirthDate!) 
-                        : user.BirthDate;
+                user.PasswordHash = 
+                    updateUserRequest.Password != null 
+                    ? Argon2.Hash(updateUserRequest.Password!) 
+                    : user.PasswordHash;
 
-                    user.PasswordHash = 
-                        updateUserRequest.Password != null 
-                        ? Argon2.Hash(updateUserRequest.Password!) 
-                        : user.PasswordHash;
+                user.UpdatedAt = DateTime.Now;
+            }
 
-                    user.UpdatedAt = DateTime.Now;
-                }
-
-                await userRepository.UpdateUser(user!);
-            }          
+            await userRepository.UpdateUser(user!);
         }      
     }
 }
