@@ -42,5 +42,37 @@ namespace Bank_API.PresentationLayer.Controllers
 
             return StatusCode(400, new { error = "Card not created. You can have only 2 cards of same currency." });
         }
+
+        /// <summary>
+        /// Get list of non closed user cards.
+        /// </summary>
+        /// <remarks>
+        /// Sample responce:
+        ///
+        ///     GET/List of cards/Bank API
+        ///     "cards": [
+        ///         {
+        ///             "id": "int",
+        ///             "number": "number",
+        ///             "exp":"string"(format'MM/YY'),
+        ///             "cvv": "number",
+        ///             "currency": "string",
+        ///             "balance":"number",
+        ///             "status":"string",
+        ///         }
+        ///     ]
+        /// </remarks>
+        /// <response code="200">Returns information about user cards</response>
+        [HttpGet]
+        [Authorize(Roles ="User")]
+        public async Task<IActionResult> GetCardList()
+        {
+            var cardArray = await cardService.GetUserCards();
+
+            return StatusCode(200, new
+            {
+                cards = cardArray
+            });
+        }
     }
 }

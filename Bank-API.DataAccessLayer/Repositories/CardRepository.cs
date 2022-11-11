@@ -36,5 +36,13 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .Where(c => c.UserId == userId && c.Currency == currency)
                 .ToListAsync();
         }
+
+        public async Task<Card[]?> GetUserCardsById(int? userId)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.UserId == userId && c.Status != CardStatus.closed)
+                .ToArrayAsync();
+        }
     }
 }

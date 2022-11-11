@@ -3,6 +3,7 @@ using Bank_API.BusinessLogicLayer.Models;
 using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
+using Bank_API.DataAccessLayer.Repositories;
 using Microsoft.Extensions.Configuration;
 
 namespace Bank_API.BusinessLogicLayer.Services
@@ -41,11 +42,43 @@ namespace Bank_API.BusinessLogicLayer.Services
                     Number = await GetNumber(),
                     Exp = DateTime.Now.AddYears(6),
                     Currency = (Currency) Enum.Parse(typeof(Currency), cardRequest.Currency!),
-                    Status = CardStatus.Active,
+                    Status = CardStatus.active,
                 };
 
                 await cardRepository.CreateCard(newCard);
                 return newCard.Id;
+            }
+
+            return null;
+        }
+
+        public async Task<CardResponce[]?> GetUserCards()
+        {
+            var authenticateUser = authService.GetAuthenticateUser();
+            var user = await userRepository.GetUserByEmail(authenticateUser!.Email!);
+            var cards = await cardRepository.GetUserCardsById(user!.Id);
+
+            if (cards != null)
+            {
+                CardResponce[] cardsResponce = new CardResponce[cards.Length];
+
+                for (int i = 0; i < cards.Length; i++)
+                {
+                    var cardResponce = new CardResponce
+                    {
+                        Id = cards[i].Id,
+                        Number = cards[i].Number,
+                        Exp = String.Format("{0:MM/yy}", cards[i].Exp),
+                        Cvv = cards[i].Cvv,
+                        Currency = cards[i].Currency.ToString(),
+                        Balance = cards[i].Balance,
+                        Status = cards[i].Status.ToString(),
+                    };
+
+                    cardsResponce[i] = cardResponce;
+                }
+
+                return cardsResponce;
             }
 
             return null;

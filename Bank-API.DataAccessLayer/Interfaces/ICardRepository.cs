@@ -8,5 +8,6 @@ namespace Bank_API.DataAccessLayer.Interfaces
         public Task CreateCard(T card);
         public Task<T?> GetLastCard();
         public Task<ICollection<T>?> GetUserCards(int? userId, Currency currency);
+        public Task<T[]?> GetUserCardsById(int? userId);
     }
 }
