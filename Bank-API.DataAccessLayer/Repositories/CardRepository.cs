@@ -33,7 +33,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
-                .Where(c => c.UserId == userId && c.Currency == currency)
+                .Where(c => c.UserId == userId && c.Currency == currency && c.Status != CardStatus.closed)
                 .ToListAsync();
         }
 

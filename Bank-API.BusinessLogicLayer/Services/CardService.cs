@@ -25,7 +25,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<int?> CreateCard(CardCreateRequest cardRequest)
         {
-            var user = userService.GetUser();
+            var user = await userService.GetUser();
             var sameCurrencyCards = await cardRepository.GetUserCards(user!.Id, (Currency)Enum.Parse(typeof(Currency), cardRequest.Currency!));
 
             if(user != null && sameCurrencyCards!.Count < 2)
