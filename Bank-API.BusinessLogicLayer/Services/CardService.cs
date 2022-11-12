@@ -50,7 +50,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<CardResponse[]?> GetUserCards()
         {
-            var user = userService.GetUser();
+            var user = await userService.GetUser();
             var cards = await cardRepository.GetUserCardsById(user!.Id);
 
             if (cards != null)
