@@ -4,6 +4,7 @@ using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
 using Microsoft.Extensions.Configuration;
+using System.Globalization;
 
 namespace Bank_API.BusinessLogicLayer.Services
 {
@@ -59,7 +60,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 {
                     Id = c.Id,
                     Number = c.Number,
-                    Exp = String.Format("{0:MM/yy}", c.Exp),
+                    Exp = c.Exp?.ToString("MM/yy", CultureInfo.InvariantCulture),
                     Cvv = c.Cvv,
                     Currency = c.Currency.ToString(),
                     Balance = c.Balance,
@@ -84,3 +85,5 @@ namespace Bank_API.BusinessLogicLayer.Services
         }
     }
 }
+
+
