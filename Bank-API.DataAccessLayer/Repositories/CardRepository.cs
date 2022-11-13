@@ -1,4 +1,4 @@
-﻿using Bank_API.DataAccessLayer.DataContext;
+using Bank_API.DataAccessLayer.DataContext;
 using Bank_API.DataAccessLayer.Enums;
 using Bank_API.DataAccessLayer.Interfaces;
 using Bank_API.DataAccessLayer.Models;
@@ -33,8 +33,16 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
-                .Where(c => c.UserId == userId && c.Currency == currency)
+                .Where(c => c.UserId == userId && c.Currency == currency && c.Status != CardStatus.closed)
                 .ToListAsync();
+        }
+
+        public async Task<Card[]?> GetUserCardsById(int? userId)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.UserId == userId && c.Status != CardStatus.closed)
+                .ToArrayAsync();
         }
     }
 }

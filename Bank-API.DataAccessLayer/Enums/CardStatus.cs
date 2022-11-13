@@ -2,8 +2,8 @@
 {
     public enum CardStatus
     {
-        Active,
-        Closed,
-        Frozen
+        active,
+        closed,
+        frozen
     }
 }
