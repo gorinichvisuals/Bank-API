@@ -12,21 +12,21 @@ namespace Bank_API.BusinessLogicLayer.Services
     {
         private readonly ICardRepository<Card> cardRepository;
         private readonly IConfiguration configuration;
-        private readonly IUserService userService;
+        private readonly IAuthService authService;
 
         public CardService(ICardRepository<Card> cardRepository, 
                            IAuthService authService,                          
                            IConfiguration configuration,
-                           IUserService userService)
+                           IAuthService authService1)
         {
             this.cardRepository = cardRepository;
             this.configuration = configuration;
-            this.userService = userService;
+            this.authService = authService;
         }
 
         public async Task<int?> CreateCard(CardCreateRequest cardRequest)
         {
-            var user = await userService.GetUser();
+            var user = await authService.GetUser();
             var sameCurrencyCards = await cardRepository.GetUserCards(user!.Id, (Currency)Enum.Parse(typeof(Currency), cardRequest.Currency!));
 
             if(user != null && sameCurrencyCards!.Count < 2)
@@ -51,7 +51,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<CardResponse[]?> GetUserCards()
         {
-            var user = await userService.GetUser();
+            var user = await authService.GetUser();
             var cards = await cardRepository.GetUserCardsById(user!.Id);
 
             if (cards != null)
@@ -72,6 +72,33 @@ namespace Bank_API.BusinessLogicLayer.Services
             }
 
             return null;
+        }
+
+        public async Task<bool> ChangeCardStatus(int id)
+        {
+            var user = await authService.GetUser();
+            var cards = await cardRepository.GetUserCardsById(user!.Id);
+
+            if(cards != null)
+            {
+                var card = cards!.FirstOrDefault(c => c.Id == id);
+
+                //Âüובאעü switch-case גלוסעמ if-מג
+
+                if (card!.Status != CardStatus.frozen)
+                {
+                    card.Status = CardStatus.frozen;
+                    return true;
+                }
+
+                if (card.Status == CardStatus.frozen)
+                {
+                    card.Status = CardStatus.active;
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private async Task<long?> GetNumber()

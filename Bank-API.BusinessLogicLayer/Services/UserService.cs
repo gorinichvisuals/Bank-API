@@ -17,23 +17,10 @@ namespace Bank_API.BusinessLogicLayer.Services
             this.userRepository = userRepository;
             this.authService = authService;
         }
-
-        public async Task<User?> GetUser()
-        {
-            var authenticateUser = authService.GetAuthenticateUser();
-
-            if (authenticateUser != null)
-            {
-                var user = await userRepository.GetUserByEmail(authenticateUser.Email!);
-                return user;
-            }
-
-            return null;
-        }
-        
+      
         public async Task UpdateUser(UserUpdateRequest updateUserRequest)
         {
-            var user = await GetUser();
+            var user = await authService.GetUser();
             
             if (user != null)
             {

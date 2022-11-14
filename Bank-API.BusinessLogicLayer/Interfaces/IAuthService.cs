@@ -7,6 +7,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
     {
         public Task<string?> CreateUser(UserRegistrationRequest userRequest);
         public Task<string?> Login(UserLoginRequest userRequest);
-        public User? GetAuthenticateUser();
+        public Task<User?> GetUser();
     }
 }

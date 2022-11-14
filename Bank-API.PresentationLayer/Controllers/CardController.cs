@@ -64,7 +64,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// </remarks>
         /// <response code="200">Returns information about user cards</response>
         [HttpGet]
-        [Authorize(Roles ="User")]
+        [Authorize(Roles = "User")]
         public async Task<IActionResult> GetCardList()
         {
             var cardArray = await cardService.GetUserCards();
@@ -73,6 +73,38 @@ namespace Bank_API.PresentationLayer.Controllers
             {
                 cards = cardArray
             });
+        }
+
+        /// <summary>
+        /// Change card status.
+        /// </summary>
+        /// <remarks>
+        /// Sample responce:
+        ///
+        ///     PUT /Bank API()
+        ///     {
+        ///     }
+        /// </remarks>
+        /// <response code="201">If card status change to freeze.</response>
+        /// <response code="401">If card status already frozen.</response>
+        /// <response code="404">If card status change to freeze.</response>
+        [HttpPut]
+        [Route("{id:int}/status")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> ChangeCardStatus(int id)
+        {
+            var result = await cardService.ChangeCardStatus(id);
+
+            if (result == true)
+            {
+                return StatusCode(201, "Created");
+            }
+            if(result == false)
+            {
+                return StatusCode(401, new { error = "Card Is already frozen/unfrozen" });
+            }
+
+            return StatusCode(404, new {error = "Card not found or unavailable" });
         }
     }
 }
