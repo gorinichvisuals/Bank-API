@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bank_API.BusinessLogicLayer.Helpers;
+using Bank_API.DataAccessLayer.Enums;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bank_API.BusinessLogicLayer.Models
 {
