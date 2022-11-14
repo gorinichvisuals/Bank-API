@@ -45,7 +45,7 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .ToArrayAsync();
         }
 
-        public async Task UpdateCardStatus(Card card)
+        public async Task UpdateCard(Card card)
         {
             data.Cards?.Update(card);
             await data.SaveChangesAsync();

@@ -89,7 +89,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                     {
                         card.Status = CardStatus.frozen;
                         card.UpdatedAt = DateTime.Now;
-                        await cardRepository.UpdateCardStatus(card);
+                        await cardRepository.UpdateCard(card);
 
                         return true;
                     }
@@ -98,7 +98,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                     {
                         card.Status = CardStatus.active;
                         card.UpdatedAt = DateTime.Now;
-                        await cardRepository.UpdateCardStatus(card);
+                        await cardRepository.UpdateCard(card);
 
                         return true;
                     }
