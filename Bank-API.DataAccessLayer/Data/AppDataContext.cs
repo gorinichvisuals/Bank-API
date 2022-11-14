@@ -18,6 +18,7 @@ namespace Bank_API.DataAccessLayer.DataContext
 
         public DbSet<User>? Users { get; set; }
         public DbSet<Card>? Cards { get; set; }
+        public DbSet<Transaction>? Transactions { get; set; }
         
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -60,7 +61,19 @@ namespace Bank_API.DataAccessLayer.DataContext
             modelBuilder.Entity<Card>()
                 .Property(c => c.Status)
                 .HasConversion<int>();
-            
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.CreatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.UpdatedAt)
+                .HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<Transaction>()
+                .Property(t => t.Type)
+                .HasConversion<int>();
+
             base.OnModelCreating(modelBuilder); 
         }
     }
