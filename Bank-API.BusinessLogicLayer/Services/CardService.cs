@@ -102,9 +102,9 @@ namespace Bank_API.BusinessLogicLayer.Services
 
                         return true;
                     }
-                }
 
-                return false;
+                    return false;
+                }
             }
 
             return null;
