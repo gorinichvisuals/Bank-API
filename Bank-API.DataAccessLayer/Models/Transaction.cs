@@ -22,6 +22,7 @@ namespace Bank_API.DataAccessLayer.Models
 
         [Required]
         public TransactionType? Type { get; set; }
+
         public string? Peer { get; set; }
 
         [Required]
