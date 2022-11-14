@@ -200,12 +200,17 @@ namespace Bank_API.DataAccessLayer.Migrations
             modelBuilder.Entity("Bank_API.DataAccessLayer.Models.Transaction", b =>
                 {
                     b.HasOne("Bank_API.DataAccessLayer.Models.Card", "Card")
-                        .WithMany()
+                        .WithMany("Transactions")
                         .HasForeignKey("CardId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
                     b.Navigation("Card");
+                });
+
+            modelBuilder.Entity("Bank_API.DataAccessLayer.Models.Card", b =>
+                {
+                    b.Navigation("Transactions");
                 });
 
             modelBuilder.Entity("Bank_API.DataAccessLayer.Models.User", b =>

@@ -43,5 +43,7 @@ namespace Bank_API.DataAccessLayer.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? UpdatedAt { get; set; }
+
+        public ICollection<Transaction>? Transactions { get; set; }
     }
 }
