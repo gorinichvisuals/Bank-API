@@ -74,7 +74,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<bool> ChangeCardStatus(int id)
+        public async Task<bool?> ChangeCardStatus(CardStatusRequest statusRequest, int id)
         {
             var user = await authService.GetUser();
             var cards = await cardRepository.GetUserCardsById(user!.Id);
@@ -83,22 +83,31 @@ namespace Bank_API.BusinessLogicLayer.Services
             {
                 var card = cards!.FirstOrDefault(c => c.Id == id);
 
-                //Âüובאעü switch-case גלוסעמ if-מג
-
-                if (card!.Status != CardStatus.frozen)
+                if (card!.Status != CardStatus.closed)
                 {
-                    card.Status = CardStatus.frozen;
-                    return true;
+                    if(statusRequest.Request == true && card.Status == CardStatus.active)
+                    {
+                        card.Status = CardStatus.frozen;
+                        card.UpdatedAt = DateTime.Now;
+                        await cardRepository.UpdateCardStatus(card);
+
+                        return true;
+                    }
+
+                    if (statusRequest.Request == false && card.Status == CardStatus.frozen)
+                    {
+                        card.Status = CardStatus.active;
+                        card.UpdatedAt = DateTime.Now;
+                        await cardRepository.UpdateCardStatus(card);
+
+                        return true;
+                    }
                 }
 
-                if (card.Status == CardStatus.frozen)
-                {
-                    card.Status = CardStatus.active;
-                    return true;
-                }
+                return false;
             }
 
-            return false;
+            return null;
         }
 
         private async Task<long?> GetNumber()

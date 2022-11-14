@@ -19,6 +19,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// <summary>
         /// Create a new user card.
         /// </summary>
+        /// <returns>Return card id</returns>
         /// <remarks>
         /// Sample request:
         ///
@@ -44,7 +45,7 @@ namespace Bank_API.PresentationLayer.Controllers
         }
 
         /// <summary>
-        /// Get list of non closed user cards.
+        /// Get array of non closed user cards.
         /// </summary>
         /// <remarks>
         /// Sample responce:
@@ -78,33 +79,36 @@ namespace Bank_API.PresentationLayer.Controllers
         /// <summary>
         /// Change card status.
         /// </summary>
+        /// <returns>None</returns>
         /// <remarks>
         /// Sample responce:
         ///
         ///     PUT /Bank API()
         ///     {
+        ///         "request": (true/false value)
         ///     }
         /// </remarks>
-        /// <response code="201">If card status change to freeze.</response>
-        /// <response code="401">If card status already frozen.</response>
-        /// <response code="404">If card status change to freeze.</response>
+        /// <response code="201">If card status change to freeze/unfreeze.</response>
+        /// <response code="401">If card status already have this status.</response>
+        /// <response code="404">If card not found or unavailable.</response>
         [HttpPut]
         [Route("{id:int}/status")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> ChangeCardStatus(int id)
+        public async Task<IActionResult> ChangeCardStatus([FromBody] CardStatusRequest statusRequest, int id)
         {
-            var result = await cardService.ChangeCardStatus(id);
+            var result = await cardService.ChangeCardStatus(statusRequest, id);
+
+            if(result == null)
+            {
+                return StatusCode(404, new { error = "Card not found or unavailable" });
+            }
 
             if (result == true)
             {
                 return StatusCode(201, "Created");
             }
-            if(result == false)
-            {
-                return StatusCode(401, new { error = "Card Is already frozen/unfrozen" });
-            }
 
-            return StatusCode(404, new {error = "Card not found or unavailable" });
+            return StatusCode(401, new { error = "Card Is already frozen/unfrozen" });
         }
     }
 }
