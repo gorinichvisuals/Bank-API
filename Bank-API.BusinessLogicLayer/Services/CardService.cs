@@ -83,7 +83,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             {
                 var card = cards!.FirstOrDefault(c => c.Id == id);
 
-                if (card!.Status != CardStatus.closed)
+                if (card != null && card!.Status != CardStatus.closed)
                 {
                     if(statusRequest.Request == true && card.Status == CardStatus.active)
                     {
