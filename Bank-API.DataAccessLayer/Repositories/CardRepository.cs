@@ -25,6 +25,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
+                .Include(c => c.Transactions)
                 .OrderBy(c=>c.Number)
                 .LastOrDefaultAsync();
         }
@@ -33,6 +34,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
+                .Include(c => c.Transactions)
                 .Where(c => c.UserId == userId && c.Currency == currency && c.Status != CardStatus.closed)
                 .ToListAsync();
         }
@@ -41,6 +43,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
+                .Include(c => c.Transactions)
                 .Where(c => c.UserId == userId && c.Status != CardStatus.closed)
                 .ToArrayAsync();
         }

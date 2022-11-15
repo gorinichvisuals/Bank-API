@@ -38,17 +38,17 @@ namespace Bank_API.BusinessLogicLayer.Services
             if (user != null)
             {
                 user.Phone = 
-                    updateUserRequest.Phone != null 
+                    updateUserRequest!.Phone != null 
                     ? updateUserRequest.Phone 
                     : user.Phone;
 
                 user.FirstName = 
-                    updateUserRequest.FirstName != null 
+                    updateUserRequest!.FirstName != null 
                     ? updateUserRequest.FirstName 
                     : user.FirstName;
 
                 user.LastName = 
-                    updateUserRequest.LastName != null 
+                    updateUserRequest!.LastName != null 
                     ? updateUserRequest.LastName 
                     : user.LastName;
 
