@@ -22,13 +22,13 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<TransactionResponse?> GetTransactionById(int? id)
         {
-            var user = await userService.GetUser();
+            User? user = await userService.GetUser();
 
             if (user != null)
             {
-                var transactionInfo = await transactionRepository.GetTransactionById(id);
+                Transaction? transactionInfo = await transactionRepository.GetTransactionById(id);
 
-                var transactionResponce = new TransactionResponse
+                TransactionResponse transactionResponce = new TransactionResponse
                 {
                     Amount = transactionInfo!.Amount,
                     Message = transactionInfo.Message,
