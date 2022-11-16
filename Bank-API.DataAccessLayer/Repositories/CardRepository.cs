@@ -45,6 +45,14 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .ToArrayAsync();
         }
 
+        public async Task<Card?> GetCardById(int id)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.Id == id && c.Status != CardStatus.closed)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task UpdateCard(Card card)
         {
             data.Cards?.Update(card);

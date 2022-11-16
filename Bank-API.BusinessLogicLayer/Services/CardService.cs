@@ -16,8 +16,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public CardService(ICardRepository<Card> cardRepository, 
                            IAuthService authService,                          
-                           IConfiguration configuration,
-                           IAuthService authService1)
+                           IConfiguration configuration)
         {
             this.cardRepository = cardRepository;
             this.configuration = configuration;
@@ -74,36 +73,27 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<bool?> ChangeCardStatus(CardStatusRequest statusRequest, int id)
+        public async Task<bool?> ChangeCardStatus(bool freezeCard, int id)
         {
-            var user = await authService.GetUser();
-            var cards = await cardRepository.GetUserCardsById(user!.Id);
+            User? user = await authService.GetUser();
 
-            if(cards != null)
+            if(user != null)
             {
-                var card = cards!.FirstOrDefault(c => c.Id == id);
+                Card? card = await cardRepository.GetCardById(id);
 
-                if (card != null && card!.Status != CardStatus.closed)
+                if (card != null)
                 {
-                    if(statusRequest.Request == true && card.Status == CardStatus.active)
-                    {
-                        card.Status = CardStatus.frozen;
-                        card.UpdatedAt = DateTime.Now;
-                        await cardRepository.UpdateCard(card);
+                    CardStatus requiredStatus = freezeCard ? CardStatus.active : CardStatus.frozen;
 
-                        return true;
+                    if (card.Status == requiredStatus)
+                    {
+                        return false;
                     }
 
-                    if (statusRequest.Request == false && card.Status == CardStatus.frozen)
-                    {
-                        card.Status = CardStatus.active;
-                        card.UpdatedAt = DateTime.Now;
-                        await cardRepository.UpdateCard(card);
-
-                        return true;
-                    }
-
-                    return false;
+                    card.Status = requiredStatus;
+                    card.UpdatedAt = DateTime.Now;
+                    await cardRepository.UpdateCard(card);
+                    return true;
                 }
             }
 

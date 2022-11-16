@@ -6,6 +6,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
     {
         public Task<int?> CreateCard(CardCreateRequest request);
         public Task<CardResponse[]?> GetUserCards();
-        public Task<bool?> ChangeCardStatus(CardStatusRequest statusRequest, int id);
+        public Task<bool?> ChangeCardStatus(bool freezeCard, int id);
     }
 }

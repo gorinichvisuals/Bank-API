@@ -85,7 +85,8 @@ namespace Bank_API.PresentationLayer.Controllers
         ///
         ///     PUT /Bank API()
         ///     {
-        ///         "request": (true/false value)
+        ///         "freezeCard": (true/false value),
+        ///         "id": "number of card id"
         ///     }
         /// </remarks>
         /// <response code="201">If card status change to freeze/unfreeze.</response>
@@ -94,9 +95,9 @@ namespace Bank_API.PresentationLayer.Controllers
         [HttpPut]
         [Route("{id:int}/status")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> ChangeCardStatus([FromBody] CardStatusRequest statusRequest, int id)
+        public async Task<IActionResult> ChangeCardStatus(bool freezeCard, int id)
         {
-            var result = await cardService.ChangeCardStatus(statusRequest, id);
+            var result = await cardService.ChangeCardStatus(freezeCard, id);
 
             if(result == null)
             {
