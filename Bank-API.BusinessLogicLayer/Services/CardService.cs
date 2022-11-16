@@ -91,7 +91,6 @@ namespace Bank_API.BusinessLogicLayer.Services
                     }
 
                     card.Status = requiredStatus;
-                    card.UpdatedAt = DateTime.Now;
                     await cardRepository.UpdateCard(card);
                     return true;
                 }

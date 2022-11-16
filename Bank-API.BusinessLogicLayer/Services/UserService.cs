@@ -48,8 +48,6 @@ namespace Bank_API.BusinessLogicLayer.Services
                     updateUserRequest.Password != null 
                     ? Argon2.Hash(updateUserRequest.Password!) 
                     : user.PasswordHash;
-
-                user.UpdatedAt = DateTime.Now;
             }
 
             await userRepository.UpdateUser(user!);

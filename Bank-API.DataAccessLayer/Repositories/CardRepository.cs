@@ -55,6 +55,7 @@ namespace Bank_API.DataAccessLayer.Repositories
 
         public async Task UpdateCard(Card card)
         {
+            card.UpdatedAt = DateTime.Now;
             data.Cards?.Update(card);
             await data.SaveChangesAsync();
         }
