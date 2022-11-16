@@ -28,17 +28,20 @@ namespace Bank_API.BusinessLogicLayer.Services
             {
                 Transaction? transactionInfo = await transactionRepository.GetTransactionById(id);
 
-                TransactionResponse transactionResponce = new TransactionResponse
+                if(transactionInfo != null)
                 {
-                    Amount = transactionInfo!.Amount,
-                    Message = transactionInfo.Message,
-                    Type = transactionInfo.Type.ToString(),
-                    Peer = transactionInfo.Peer,
-                    ResultingBalance = transactionInfo.ResultingBalance,
-                    Date = transactionInfo.CreatedAt
-                };
+                    TransactionResponse transactionResponce = new TransactionResponse
+                    {
+                        Amount = transactionInfo!.Amount,
+                        Message = transactionInfo.Message,
+                        Type = transactionInfo.Type.ToString(),
+                        Peer = transactionInfo.Peer,
+                        ResultingBalance = transactionInfo.ResultingBalance,
+                        Date = transactionInfo.CreatedAt
+                    };
 
-                return transactionResponce;
+                    return transactionResponce;
+                }
             }
 
             return null;
