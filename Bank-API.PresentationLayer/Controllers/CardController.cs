@@ -95,21 +95,21 @@ namespace Bank_API.PresentationLayer.Controllers
         [HttpPut]
         [Route("{id:int}/status")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> ChangeCardStatus(bool freezeCard, int id)
+        public async Task<IActionResult> ChangeCardStatus([FromBody] CardStatusRequest request, int id)
         {
-            var result = await cardService.ChangeCardStatus(freezeCard, id);
+            var result = await cardService.ChangeCardStatus(request.FreezeCard, id);
 
             if(result == null)
             {
                 return StatusCode(404, new { error = "Card not found or unavailable" });
             }
 
-            if (result == true)
+            if (result != true)
             {
-                return StatusCode(201, "Created");
+                return StatusCode(401, new { error = "Card Is already frozen/unfrozen" });
             }
 
-            return StatusCode(401, new { error = "Card Is already frozen/unfrozen" });
+            return StatusCode(201, "Created");
         }
     }
 }

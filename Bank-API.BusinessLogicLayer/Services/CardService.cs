@@ -73,27 +73,23 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<bool?> ChangeCardStatus(bool freezeCard, int id)
+        public async Task<bool?> ChangeCardStatus(bool? freezeCard, int id)
         {
             User? user = await authService.GetUser();
+            Card? card = await cardRepository.GetCardById(id);
 
-            if(user != null)
+            if (user != null && freezeCard != null && card != null)
             {
-                Card? card = await cardRepository.GetCardById(id);
+                CardStatus requiredStatus = freezeCard == true ? CardStatus.active : CardStatus.frozen;
 
-                if (card != null)
+                if (card.Status == requiredStatus)
                 {
-                    CardStatus requiredStatus = freezeCard ? CardStatus.active : CardStatus.frozen;
-
-                    if (card.Status == requiredStatus)
-                    {
-                        return false;
-                    }
-
-                    card.Status = requiredStatus;
-                    await cardRepository.UpdateCard(card);
-                    return true;
+                    return false;
                 }
+
+                card.Status = requiredStatus;
+                await cardRepository.UpdateCard(card);
+                return true;
             }
 
             return null;
