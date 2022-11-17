@@ -9,20 +9,17 @@ namespace Bank_API.BusinessLogicLayer.Services
     {
         private readonly ITransactionRepository<Transaction> transactionRepository;
         private readonly IAuthService authService;
-        private readonly IUserService userService;
 
         public TransactionService(ITransactionRepository<Transaction> transactionRepository, 
-                                  IAuthService authService, 
-                                  IUserService userService)
+                                  IAuthService authService)
         {
             this.transactionRepository = transactionRepository;
             this.authService = authService;
-            this.userService = userService;
         }
 
         public async Task<TransactionResponse?> GetTransactionById(int? id)
         {
-            User? user = await userService.GetUser();
+            User? user = await authService.GetUser();
 
             if (user != null)
             {

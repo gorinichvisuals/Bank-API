@@ -79,8 +79,7 @@ namespace Bank_API.BusinessLogicLayer.Services
             Card? card = await cardRepository.GetCardById(id);
 
             if(card != null && user != null) 
-            { 
-            
+            {            
                 if(freezeCard != null)
                 {
                     CardStatus requiredStatus = freezeCard != true ? CardStatus.active : CardStatus.frozen;
