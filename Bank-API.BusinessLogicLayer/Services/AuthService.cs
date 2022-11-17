@@ -62,7 +62,20 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public User? GetAuthenticateUser()
+        public async Task<User?> GetUser()
+        {
+            var authenticateUser = GetAuthenticateUser();
+
+            if (authenticateUser != null)
+            {
+                var user = await userRepository.GetUserByEmail(authenticateUser.Email!);
+                return user;
+            }
+
+            return null;
+        }
+
+        private User? GetAuthenticateUser()
         {
             var identity = httpContextAccessor.HttpContext?.User.Identity as ClaimsIdentity;
 

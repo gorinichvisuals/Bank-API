@@ -44,5 +44,20 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .Where(c => c.UserId == userId && c.Status != CardStatus.closed)
                 .ToArrayAsync();
         }
+
+        public async Task<Card?> GetCardById(int id)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.Id == id && c.Status != CardStatus.closed)
+                .FirstOrDefaultAsync();
+        }
+
+        public async Task UpdateCard(Card card)
+        {
+            card.UpdatedAt = DateTime.Now;
+            data.Cards?.Update(card);
+            await data.SaveChangesAsync();
+        }
     }
 }

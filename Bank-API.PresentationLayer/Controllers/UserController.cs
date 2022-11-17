@@ -14,10 +14,13 @@ namespace Bank_API.PresentationLayer.Controllers
     public class UserController : ControllerBase
     {
         private readonly IUserService userService;
+        private readonly IAuthService authService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, 
+                              IAuthService authService)
         {
             this.userService = userService;
+            this.authService = authService;
         }
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace Bank_API.PresentationLayer.Controllers
         [Authorize(Roles = "User")]
         public async Task<IActionResult> GetPersonalInfo()
         {            
-            var currentUser = await userService.GetUser();
+            var currentUser = await authService.GetUser();
 
             if (currentUser != null)
             {

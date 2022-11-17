@@ -22,6 +22,7 @@ namespace Bank_API.DataAccessLayer.Repositories
 
         public async Task UpdateUser(User user)
         {
+            user.UpdatedAt = DateTime.Now;
             data.Users?.Update(user);
             await data.SaveChangesAsync();
         }

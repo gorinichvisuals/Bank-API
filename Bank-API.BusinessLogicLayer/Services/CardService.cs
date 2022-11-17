@@ -12,21 +12,20 @@ namespace Bank_API.BusinessLogicLayer.Services
     {
         private readonly ICardRepository<Card> cardRepository;
         private readonly IConfiguration configuration;
-        private readonly IUserService userService;
+        private readonly IAuthService authService;
 
         public CardService(ICardRepository<Card> cardRepository, 
                            IAuthService authService,                          
-                           IConfiguration configuration,
-                           IUserService userService)
+                           IConfiguration configuration)
         {
             this.cardRepository = cardRepository;
             this.configuration = configuration;
-            this.userService = userService;
+            this.authService = authService;
         }
 
         public async Task<int?> CreateCard(CardCreateRequest cardRequest)
         {
-            var user = await userService.GetUser();
+            var user = await authService.GetUser();
             var sameCurrencyCards = await cardRepository.GetUserCards(user!.Id, (Currency)Enum.Parse(typeof(Currency), cardRequest.Currency!));
 
             if(user != null && sameCurrencyCards!.Count < 2)
@@ -51,7 +50,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
         public async Task<CardResponse[]?> GetUserCards()
         {
-            var user = await userService.GetUser();
+            var user = await authService.GetUser();
             var cards = await cardRepository.GetUserCardsById(user!.Id);
 
             if (cards != null)
@@ -69,6 +68,31 @@ namespace Bank_API.BusinessLogicLayer.Services
                     .ToArray();
 
                 return arraysResponse;
+            }
+
+            return null;
+        }
+
+        public async Task<bool?> ChangeCardStatus(bool? freezeCard, int id)
+        {
+            User? user = await authService.GetUser();
+            Card? card = await cardRepository.GetCardById(id);
+
+            if(card != null && user != null) 
+            {            
+                if(freezeCard != null)
+                {
+                    CardStatus requiredStatus = freezeCard != true ? CardStatus.active : CardStatus.frozen;
+
+                    if (card.Status != requiredStatus)
+                    {
+                        card.Status = requiredStatus;
+                        await cardRepository.UpdateCard(card);
+                        return true;
+                    }
+                }
+
+                return false;
             }
 
             return null;
