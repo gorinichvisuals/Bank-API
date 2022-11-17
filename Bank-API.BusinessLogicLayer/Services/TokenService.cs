@@ -37,16 +37,5 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
-        
-        public string GenerateRefreshToken()
-        {
-            var random = new byte[64];
-
-            using var rand = RandomNumberGenerator.Create();
-            {
-                rand.GetBytes(random);
-                return Convert.ToBase64String(random);
-            }
-        }
     }
 }
