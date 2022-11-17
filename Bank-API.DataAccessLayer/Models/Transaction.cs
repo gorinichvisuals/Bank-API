@@ -3,36 +3,30 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Bank_API.DataAccessLayer.Models
 {
-    public class Card
+    public class Transaction
     {
         [Key]
         public int Id { get; set; }
-        
-        [Required]
-        public int UserId { get; set; }
 
         [Required]
-        public User? User { get; set; }
+        public int CardId { get; set; }
 
         [Required]
-        public DateTime? Exp { get; set; }
+        public Card? Card { get; set; }
 
         [Required]
-        [StringLength(3)]
-        public short? Cvv { get; set; }
+        public long? Amount { get; set; }
+
+        [StringLength(255)]
+        public string? Message { get; set; }
 
         [Required]
-        [StringLength(16)]
-        public long? Number { get; set; }
+        public TransactionType? Type { get; set; }
+
+        public string? Peer { get; set; }
 
         [Required]
-        public Currency? Currency { get; set; }
-
-        [Required]
-        public long? Balance { get; set; }
-
-        [Required]
-        public CardStatus? Status { get; set; }
+        public long? ResultingBalance { get; set; }
 
         [Required]
         [DataType(DataType.Date)]
@@ -43,7 +37,5 @@ namespace Bank_API.DataAccessLayer.Models
         [DataType(DataType.Date)]
         [DisplayFormat(DataFormatString = "{0:yyyy-MM-dd}", ApplyFormatInEditMode = true)]
         public DateTime? UpdatedAt { get; set; }
-
-        public ICollection<Transaction>? Transactions { get; set; }
     }
 }

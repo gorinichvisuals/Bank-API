@@ -53,10 +53,12 @@ builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.U
 
 builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
 builder.Services.AddScoped<ICardRepository<Card>, CardRepository>();
+builder.Services.AddScoped<ITransactionRepository<Transaction>, TransactionRepository>();
 
 builder.Services.AddScoped<IAuthService, AuthService>();
 builder.Services.AddScoped<IUserService, UserService>();
 builder.Services.AddScoped<ICardService, CardService>();
+builder.Services.AddScoped<ITransactionService, TransactionService>();
 
 builder.Services.AddScoped<ITokenService, TokenService>();  
 builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
