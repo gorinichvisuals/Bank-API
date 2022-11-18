@@ -83,7 +83,13 @@ namespace Bank_API.BusinessLogicLayer.Services
                     ResultingBalance = toTransferCard?.Balance + request.Amount,
                 };
 
+                userCard.Balance -= request.Amount;
+                toTransferCard!.Balance += request.Amount; 
+
+                await cardRepository.UpdateCard(userCard);
+                await cardRepository.UpdateCard(toTransferCard!);  
                 await transactionRepository.CreateTransaction(transactionFrom, transactionTo);
+
                 return transactionFrom.Id;
             }
 
