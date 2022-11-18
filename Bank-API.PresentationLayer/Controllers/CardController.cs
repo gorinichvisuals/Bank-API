@@ -10,10 +10,13 @@ namespace Bank_API.PresentationLayer.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardService cardService;
+        private readonly ITransactionService transactionService;
 
-        public CardController(ICardService cardService)
+        public CardController(ICardService cardService,
+                              ITransactionService transactionService)
         {
             this.cardService = cardService;
+            this.transactionService = transactionService;
         }
 
         /// <summary>
@@ -110,6 +113,43 @@ namespace Bank_API.PresentationLayer.Controllers
             }
 
             return StatusCode(201, "Created");
+        }
+
+        /// <summary>
+        /// Transfer from card to card.
+        /// </summary>
+        /// <remarks>
+        /// Sample response:
+        ///
+        ///     POST /Bank API
+        ///     {
+        ///         "id": "number"(transaction id)
+        ///     }
+        /// </remarks>
+        /// <response code="201">If transfer succsessfull.</response>
+        /// <response code="404">If card not found or unavailable.</response>
+        /// <response code="401">If any other problem.</response>
+        [HttpPost]
+        [Route("{id:int}/p2p")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> TransferCardToCard(CardTransferRequest request, int? cardId)
+        {
+            var transactionId = await transactionService.TransferCardToCard(request, (int)cardId!);
+
+            if (transactionId == null)
+            {
+                return StatusCode(401, new { error = "Message describing error" });
+            }
+
+            if (cardId == null)
+            {
+                return StatusCode(404, new { error = "Card not found or unavailable"});
+            }
+
+            return StatusCode(201, new
+            {
+                id = transactionId
+            });
         }
     }
 }

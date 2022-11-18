@@ -53,6 +53,16 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .FirstOrDefaultAsync();
         }
 
+        public async Task<Card?> GetCardByCardNumber(long cardNumber)
+        {
+            return await data.Cards!
+                .AsNoTracking()
+                .Where(c => c.Number == cardNumber 
+                    && c.Status != CardStatus.frozen 
+                    && c.Status != CardStatus.closed)
+                .FirstOrDefaultAsync();
+        }
+
         public async Task UpdateCard(Card card)
         {
             card.UpdatedAt = DateTime.Now;
