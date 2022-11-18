@@ -138,7 +138,7 @@ namespace Bank_API.PresentationLayer.Controllers
 
             if (transactionId == null)
             {
-                return StatusCode(401, new { error = "Message describing error" });
+                return StatusCode(401, new { error = "Transaction failed" });
             }
 
             if (cardId == null)

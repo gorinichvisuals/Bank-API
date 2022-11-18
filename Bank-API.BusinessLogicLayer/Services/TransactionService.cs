@@ -74,7 +74,6 @@ namespace Bank_API.BusinessLogicLayer.Services
 
                 Transaction transactionTo = new ()
                 {
-                    Id = transactionFrom.Id,
                     CardId = toTransferCard.Id,
                     Amount = request.Amount,
                     Message = request.Message ?? null, 
