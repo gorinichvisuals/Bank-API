@@ -3,5 +3,6 @@
     public interface ITransactionRepository<T>
     {
         public Task<T?> GetTransactionById(int? id);
+        public Task<T[]?> GetTransactionList(int? cardId);
     }
 }

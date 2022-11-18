@@ -10,10 +10,13 @@ namespace Bank_API.PresentationLayer.Controllers
     public class CardController : ControllerBase
     {
         private readonly ICardService cardService;
+        private readonly ITransactionService transactionService;
 
-        public CardController(ICardService cardService)
+        public CardController(ICardService cardService,
+                              ITransactionService transactionService)
         {
             this.cardService = cardService;
+            this.transactionService = transactionService;
         }
 
         /// <summary>
@@ -48,7 +51,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// Get array of non closed user cards.
         /// </summary>
         /// <remarks>
-        /// Sample responce:
+        /// Sample response:
         ///
         ///     GET/List of cards/Bank API
         ///     "cards": [
@@ -81,7 +84,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// </summary>
         /// <returns>None</returns>
         /// <remarks>
-        /// Sample responce:
+        /// Sample response:
         ///
         ///     PUT /Bank API()
         ///     {
@@ -110,6 +113,45 @@ namespace Bank_API.PresentationLayer.Controllers
             }
 
             return StatusCode(201, "Created");
+        }
+
+        /// <summary>
+        /// Get array of all card transactions.
+        /// </summary>
+        /// <remarks>
+        /// Sample response:
+        ///
+        ///     GET/List of transactions/Bank API
+        ///     "transactions": [
+        ///         {
+        ///         "id": "number"
+        ///         "amount": "number"
+        ///         "message": "string",
+        ///         "type":"string",
+        ///         "peer": "string",
+        ///         "date": "date"
+        ///         }
+        ///     ]
+        /// </remarks>
+        /// <response code="200">Returns information about card transactions</response>
+        /// <response code="404">If cardn not found or unavailable</response>
+        [HttpGet]
+        [Route("{id:int}/transactions")]
+        [Authorize(Roles = "User")]
+        public async Task<IActionResult> GetTransactionsList([FromQuery] TransactionQueryParams requestParams, int cardId)
+        {
+            var transactions = await transactionService.GetTransactionsList(requestParams, cardId);
+
+            if(transactions != null)
+            {
+                return StatusCode(200, new
+                {
+                    transactions = transactions,
+                    total = transactions.Length
+                });
+            }
+
+            return StatusCode(404, new { error = "Card not found or unavailable" });
         }
     }
 }

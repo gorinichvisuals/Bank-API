@@ -27,7 +27,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// Get personal info for user.
         /// </summary>
         /// <remarks>
-        /// Sample responce:
+        /// Sample response:
         ///
         ///     GET /Bank API
         ///     {
@@ -66,7 +66,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// Update personal info for user.
         /// </summary>
         /// <remarks>
-        /// Sample responce:
+        /// Sample response:
         ///
         ///     PUT /Bank API(All parameters are optional so if parameter is not provided then it should not be changed in the database)
         ///     {

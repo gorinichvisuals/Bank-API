@@ -19,7 +19,7 @@ namespace Bank_API.PresentationLayer.Controllers
         /// Get transaction details by id.
         /// </summary>
         /// <remarks>
-        /// Sample responce:
+        /// Sample response:
         ///
         ///     GET /Bank API
         ///     {

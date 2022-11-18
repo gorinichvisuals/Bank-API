@@ -2,6 +2,7 @@
 {
     public class TransactionResponse
     {
+        public int? Id { get; set; }
         public long? Amount { get; set; }
         public string? Message { get; set; }
         public string? Type { get; set; }

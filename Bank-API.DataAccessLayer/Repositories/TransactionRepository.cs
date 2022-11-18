@@ -18,8 +18,16 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Transactions!
                 .AsNoTracking()
-                .Where(x => x.Id == id)
+                .Where(t => t.Id == id)
                 .FirstOrDefaultAsync(); 
+        }
+
+        public async Task<Transaction[]?> GetTransactionList(int? cardId)
+        {
+            return await data.Transactions!
+                .AsNoTracking()
+                .Where(t => t.CardId == cardId)
+                .ToArrayAsync();
         }
     }
 }
