@@ -22,12 +22,15 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .FirstOrDefaultAsync(); 
         }
 
-        public async Task<Transaction[]?> GetTransactionList(int? cardId)
+        public async Task<List<Transaction>?> GetTransactionList(int? cardId, string sortBy, string sortDirection)
         {
             return await data.Transactions!
                 .AsNoTracking()
                 .Where(t => t.CardId == cardId)
-                .ToArrayAsync();
+                .OrderBy(t=>t.GetType().GetProperty(sortBy)!.GetValue(t, null))
+                .ThenBy(t=>t.GetType().GetProperty(sortDirection)!.GetValue(t, null))
+                .ToListAsync();
+            
         }
     }
 }

@@ -30,7 +30,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
                 if(transactionInfo != null)
                 {
-                    TransactionResponse? transactionResponce = new TransactionResponse
+                    TransactionResponse? transactionResponce = new ()
                     {
                         Amount = transactionInfo!.Amount,
                         Message = transactionInfo.Message,
@@ -47,50 +47,30 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<TransactionResponse[]?> GetTransactionsList(TransactionQueryParams requestParams, int cardId)
+        public async Task<List<TransactionResponse>?> GetTransactionsList(TransactionQueryParams requestParams, int cardId)
         {
             User? user = await authService.GetUser();
             Card? card = await cardRepository.GetCardById(cardId);
 
             if(user != null && card != null)
             {
-                Transaction[]? transactionsArray = await transactionRepository.GetTransactionList(card!.Id);
-  
-                TransactionResponse[] transactionsResponseArray = transactionsArray!.Select(t => new TransactionResponse
-                {
-                    Id = t.Id,  
-                    Amount = t.Amount,
-                    Peer = t.Peer,
-                    Message = t.Message, 
-                    Type= t.Type.ToString(),
-                    Date = t.CreatedAt
-                })
-                    .ToArray();
+                List<Transaction>? transactions = await transactionRepository
+                    .GetTransactionList(card!.Id, requestParams.SortBy!, requestParams.SortDirection!);
 
-                switch (requestParams.SortBy)
-                {
-                    case "Amount":
-                        transactionsResponseArray = transactionsResponseArray.OrderBy(t => t.Amount).ToArray();
-                        break;
-                    case "Type":
-                        transactionsResponseArray = transactionsResponseArray.OrderBy(t => t.Type).ToArray();
-                        break;
-                    case "CreatedAt":
-                        transactionsResponseArray = transactionsResponseArray.OrderBy(t => t.Date).ToArray();
-                        break;
-                }
+                List<TransactionResponse> transactionsList = transactions!
+                                    .Select(t => new TransactionResponse
+                                    {
+                                        Id = t.Id,
+                                        Amount = t.Amount,
+                                        Peer = t.Peer,
+                                        Message = t.Message,
+                                        Type = t.Type.ToString(),
+                                        Date = t.CreatedAt
+                                    })
+                                    .Take(requestParams.Limit)
+                                    .ToList();
 
-                switch (requestParams.SortDirection)
-                {
-                    case "DESC":
-                        transactionsResponseArray = transactionsResponseArray.OrderByDescending(t => t).ToArray();
-                        break;
-                    case "ASC":
-                        transactionsResponseArray = transactionsResponseArray.OrderBy(t => t).ToArray();
-                        break;
-                }
-
-                return transactionsResponseArray;
+                return transactionsList;
             }
 
             return null;

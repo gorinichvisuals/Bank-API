@@ -131,7 +131,10 @@ namespace Bank_API.PresentationLayer.Controllers
         ///         "peer": "string",
         ///         "date": "date"
         ///         }
-        ///     ]
+        ///     ],
+        ///         { 
+        ///         "total" = "number"
+        ///         }
         /// </remarks>
         /// <response code="200">Returns information about card transactions</response>
         /// <response code="404">If cardn not found or unavailable</response>
@@ -147,7 +150,7 @@ namespace Bank_API.PresentationLayer.Controllers
                 return StatusCode(200, new
                 {
                     transactions = transactions,
-                    total = transactions.Length
+                    total = transactions.Count
                 });
             }
 
