@@ -8,7 +8,6 @@ namespace Bank_API.BusinessLogicLayer.Models
         public long? Amount { get; set; }
 
         [Required]
-        [StringLength(16)]
         public long? CardNumber { get; set; }
 
         [StringLength(128)]

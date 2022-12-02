@@ -132,23 +132,23 @@ namespace Bank_API.PresentationLayer.Controllers
         [HttpPost]
         [Route("{id:int}/p2p")]
         [Authorize(Roles = "User")]
-        public async Task<IActionResult> TransferCardToCard(CardTransferRequest request, int? cardId)
+        public async Task<IActionResult> TransferCardToCard([FromBody] CardTransferRequest request, int? id)
         {
-            var transactionId = await transactionService.TransferCardToCard(request, (int)cardId!);
+            var response = await transactionService.TransferCardToCard(request, (int)id!);
 
-            if (transactionId == null)
+            if (id == null)
             {
-                return StatusCode(401, new { error = "Transaction failed" });
+                return StatusCode(404, "Card not found or unavailable");
             }
 
-            if (cardId == null)
+            if (response.Item1 == null)
             {
-                return StatusCode(404, new { error = "Card not found or unavailable"});
+                return StatusCode(401, new { error = response.Item2 });
             }
 
             return StatusCode(201, new
             {
-                id = transactionId
+                id = response.Item1
             });
         }
     }

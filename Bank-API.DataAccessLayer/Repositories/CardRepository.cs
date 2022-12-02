@@ -57,6 +57,7 @@ namespace Bank_API.DataAccessLayer.Repositories
         {
             return await data.Cards!
                 .AsNoTracking()
+                .Include(c=>c.User)
                 .Where(c => c.Number == cardNumber 
                     && c.Status != CardStatus.frozen 
                     && c.Status != CardStatus.closed)

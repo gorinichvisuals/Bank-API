@@ -48,51 +48,69 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<int?> TransferCardToCard(CardTransferRequest request, int cardId)
+        public async Task<(int?, string?)> TransferCardToCard(CardTransferRequest request, int id)
         {
             User? user = await authService.GetUser();
-            Card? userCard = await cardRepository.GetCardById(cardId);
-            Card? toTransferCard = await cardRepository.GetCardByCardNumber((long)request.CardNumber!);
+            Card? cardFrom = await cardRepository.GetCardById(id);
+            Card? cardTo = await cardRepository.GetCardByCardNumber((long)request.CardNumber!);
 
-            if (user != null 
-                && userCard != null 
-                && toTransferCard != null 
-                && userCard.Status != CardStatus.frozen 
-                && userCard.Currency == toTransferCard.Currency 
-                && userCard.Balance >= request.Amount
-                && userCard.Number != request.CardNumber)
+            if (user != null && cardFrom != null && cardTo != null)
             {
-                Transaction transactionFrom = new ()
+                if(cardFrom.Status == CardStatus.frozen)
                 {
-                    CardId = cardId,
-                    Amount = request.Amount,
-                    Message = request.Message ?? null,
+                    var message = string.Format("Card is frozen.");
+                    return (default, message);
+                }
+
+                if(cardFrom.Currency != cardTo.Currency)
+                {
+                    var message = string.Format("Cards have different currency.");
+                    return (default, message);
+                }
+
+                if(cardFrom.Balance <= request.Amount)
+                {
+                    var message = string.Format("Insufficient funds on the balance sheet.");
+                    return (default, message);
+                }
+
+                if (cardFrom.Number == request.CardNumber)
+                {
+                    var message = string.Format("Unable to send funds to the same card.");
+                    return (default, message);
+                }
+
+                var transactionFrom = new Transaction
+                {
+                    CardId = id,
+                    Amount = -request.Amount,
+                    Message = request.Message,
                     Type = TransactionType.P2P,
-                    Peer = toTransferCard.User!.FirstName + toTransferCard.User.LastName,
-                    ResultingBalance = request.Amount - userCard.Balance,
+                    Peer = cardTo!.User!.FirstName + " " + cardTo.User.LastName,
+                    ResultingBalance = cardFrom.Balance - request.Amount,
                 };
 
-                Transaction transactionTo = new ()
+                var transactionTo = new Transaction
                 {
-                    CardId = toTransferCard.Id,
+                    CardId = cardTo.Id,
                     Amount = request.Amount,
-                    Message = request.Message ?? null, 
+                    Message = request.Message,
                     Type = TransactionType.P2P,
-                    Peer = user.FirstName + user.LastName,
-                    ResultingBalance = toTransferCard?.Balance + request.Amount,
+                    Peer = user!.FirstName + " " + user.LastName,
+                    ResultingBalance = cardTo?.Balance + request.Amount,
                 };
 
-                userCard.Balance -= request.Amount;
-                toTransferCard!.Balance += request.Amount; 
+                cardFrom.Balance -= request.Amount;
+                cardTo!.Balance += request.Amount;
 
-                await cardRepository.UpdateCard(userCard);
-                await cardRepository.UpdateCard(toTransferCard!);  
+                await cardRepository.UpdateCard(cardFrom);
+                await cardRepository.UpdateCard(cardTo!);
                 await transactionRepository.CreateTransaction(transactionFrom, transactionTo);
 
-                return transactionFrom.Id;
+                return (transactionFrom.Id, default);
             }
 
-            return null;
+            return (null, default);
         }
     }
 }
