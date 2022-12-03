@@ -59,7 +59,7 @@ namespace Bank_API.DataAccessLayer.Repositories
                 .AsNoTracking()
                 .Include(c=>c.User)
                 .Where(c => c.Number == cardNumber 
-                    && c.Status != CardStatus.frozen 
+                    && c.Status != CardStatus.frozen
                     && c.Status != CardStatus.closed)
                 .FirstOrDefaultAsync();
         }

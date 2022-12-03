@@ -141,14 +141,17 @@ namespace Bank_API.PresentationLayer.Controllers
                 return StatusCode(404, "Card not found or unavailable");
             }
 
-            if (response.Item1 == null)
+            if (response?.Result == null)
             {
-                return StatusCode(401, new { error = response.Item2 });
+                return StatusCode(401, new 
+                { 
+                    error = response!.ErrorMessage 
+                });
             }
 
             return StatusCode(201, new
             {
-                id = response.Item1
+                id = response.Result
             });
         }
     }

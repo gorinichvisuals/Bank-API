@@ -48,69 +48,82 @@ namespace Bank_API.BusinessLogicLayer.Services
             return null;
         }
 
-        public async Task<(int?, string?)> TransferCardToCard(CardTransferRequest request, int id)
+        public async Task<Response<int?>?> TransferCardToCard(CardTransferRequest request, int id)
         {
             User? user = await authService.GetUser();
-            Card? cardFrom = await cardRepository.GetCardById(id);
-            Card? cardTo = await cardRepository.GetCardByCardNumber((long)request.CardNumber!);
 
-            if (user != null && cardFrom != null && cardTo != null)
+            if (user != null)
             {
-                if(cardFrom.Status == CardStatus.frozen)
+                Card? cardFrom = await cardRepository.GetCardById(id);
+
+                if (cardFrom != null)
                 {
-                    var message = string.Format("Card is frozen.");
-                    return (default, message);
-                }
+                    Card? cardTo = await cardRepository.GetCardByCardNumber((long)request.CardNumber!);
+                    Response<int?> response = new ();
+                    
+                    if(cardTo == null)
+                    {
+                        response.ErrorMessage = string.Format("Recipient's card is not found or unavailable");
+                        return response;
+                    }
+                    
+                    if (cardFrom.Status == CardStatus.frozen)
+                    {
+                        response.ErrorMessage = string.Format("Card is frozen.");
+                        return response;
+                    }
 
-                if(cardFrom.Currency != cardTo.Currency)
-                {
-                    var message = string.Format("Cards have different currency.");
-                    return (default, message);
-                }
+                    if (cardFrom.Currency != cardTo!.Currency)
+                    {
+                        response.ErrorMessage = string.Format("Cards have different currency.");
+                        return response;
+                    }
 
-                if(cardFrom.Balance <= request.Amount)
-                {
-                    var message = string.Format("Insufficient funds on the balance sheet.");
-                    return (default, message);
-                }
+                    if (cardFrom.Balance <= request.Amount)
+                    {
+                        response.ErrorMessage = string.Format("Insufficient funds on the balance sheet.");
+                        return response;
+                    }
 
-                if (cardFrom.Number == request.CardNumber)
-                {
-                    var message = string.Format("Unable to send funds to the same card.");
-                    return (default, message);
-                }
+                    if (cardFrom.Number == request.CardNumber)
+                    {
+                        response.ErrorMessage = string.Format("Unable to send funds to the same card.");
+                        return response;
+                    }
 
-                var transactionFrom = new Transaction
-                {
-                    CardId = id,
-                    Amount = -request.Amount,
-                    Message = request.Message,
-                    Type = TransactionType.P2P,
-                    Peer = cardTo!.User!.FirstName + " " + cardTo.User.LastName,
-                    ResultingBalance = cardFrom.Balance - request.Amount,
-                };
+                    var transactionFrom = new Transaction
+                    {
+                        CardId = id,
+                        Amount = -request.Amount,
+                        Message = request.Message,
+                        Type = TransactionType.P2P,
+                        Peer = cardTo!.User!.FirstName + " " + cardTo.User.LastName,
+                        ResultingBalance = cardFrom.Balance - request.Amount,
+                    };
 
-                var transactionTo = new Transaction
-                {
-                    CardId = cardTo.Id,
-                    Amount = request.Amount,
-                    Message = request.Message,
-                    Type = TransactionType.P2P,
-                    Peer = user!.FirstName + " " + user.LastName,
-                    ResultingBalance = cardTo?.Balance + request.Amount,
-                };
+                    var transactionTo = new Transaction
+                    {
+                        CardId = cardTo.Id,
+                        Amount = request.Amount,
+                        Message = request.Message,
+                        Type = TransactionType.P2P,
+                        Peer = user!.FirstName + " " + user.LastName,
+                        ResultingBalance = cardTo?.Balance + request.Amount,
+                    };
 
-                cardFrom.Balance -= request.Amount;
-                cardTo!.Balance += request.Amount;
+                    cardFrom.Balance -= request.Amount;
+                    cardTo!.Balance += request.Amount;
 
-                await cardRepository.UpdateCard(cardFrom);
-                await cardRepository.UpdateCard(cardTo!);
-                await transactionRepository.CreateTransaction(transactionFrom, transactionTo);
+                    await cardRepository.UpdateCard(cardFrom);
+                    await cardRepository.UpdateCard(cardTo!);
+                    await transactionRepository.CreateTransaction(transactionFrom, transactionTo);
 
-                return (transactionFrom.Id, default);
+                    response.Result = transactionFrom.Id;
+                    return response;
+                }              
             }
 
-            return (null, default);
+            return null;
         }
     }
 }

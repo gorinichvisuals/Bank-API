@@ -5,6 +5,6 @@ namespace Bank_API.BusinessLogicLayer.Interfaces
     public interface ITransactionService
     {
         public Task<TransactionResponse?> GetTransactionById(int? id);
-        public Task<(int?, string?)> TransferCardToCard(CardTransferRequest request, int id);
+        public Task<Response<int?>?> TransferCardToCard(CardTransferRequest request, int id);
     }
 }
