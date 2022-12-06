@@ -105,7 +105,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 Amount = -request.Amount,
                 Message = request.Message,
                 Type = TransactionType.P2P,
-                Peer = cardTo!.User!.FirstName + " " + cardTo.User.LastName,
+                Peer = string.Format("{0} {1}", cardTo!.User!.FirstName, cardTo.User.LastName),
                 ResultingBalance = cardFrom.Balance - request.Amount,
             };
 
@@ -115,7 +115,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 Amount = request.Amount,
                 Message = request.Message,
                 Type = TransactionType.P2P,
-                Peer = user!.FirstName + " " + user.LastName,
+                Peer = string.Format("{0} {1}", user!.FirstName!, user.LastName),
                 ResultingBalance = cardTo?.Balance + request.Amount,
             };
 
