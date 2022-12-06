@@ -60,6 +60,13 @@ namespace Bank_API.BusinessLogicLayer.Services
             }
 
             Card? cardFrom = await cardRepository.GetCardById(id);
+
+            if(cardFrom == null)
+            {
+                response.ErrorMessage = string.Format("Card is not found or unavailable");
+                return response;
+            }
+
             Card? cardTo = await cardRepository.GetCardByCardNumber((long)request.CardNumber!);
                     
             if(cardTo == null)
@@ -68,9 +75,9 @@ namespace Bank_API.BusinessLogicLayer.Services
                 return response;
             }
                     
-            if (cardFrom!.Status == CardStatus.frozen)
+            if (cardFrom!.Status != CardStatus.active)
             {
-                response.ErrorMessage = string.Format("Card is frozen.");
+                response.ErrorMessage = string.Format("Card is frozen or closed.");
                 return response;
             }
 
