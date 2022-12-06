@@ -77,7 +77,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                     
             if (cardFrom!.Status != CardStatus.active)
             {
-                response.ErrorMessage = string.Format("Card is frozen or closed.");
+                response.ErrorMessage = string.Format("Card is active.");
                 return response;
             }
 
@@ -124,7 +124,8 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             await cardRepository.UpdateCard(cardFrom);
             await cardRepository.UpdateCard(cardTo!);
-            await transactionRepository.CreateTransaction(transactionFrom, transactionTo);
+            await transactionRepository.CreateTransaction(transactionFrom);
+            await transactionRepository.CreateTransaction(transactionTo);
 
             response.Result = transactionFrom.Id;
             return response;

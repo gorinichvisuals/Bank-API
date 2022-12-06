@@ -3,6 +3,6 @@
     public interface ITransactionRepository<T>
     {
         public Task<T?> GetTransactionById(int? id);
-        public Task CreateTransaction(T transactionFrom, T transactionTo);
+        public Task CreateTransaction(T transaction);
     }
 }

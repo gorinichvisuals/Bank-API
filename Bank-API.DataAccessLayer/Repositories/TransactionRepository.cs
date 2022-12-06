@@ -14,10 +14,9 @@ namespace Bank_API.DataAccessLayer.Repositories
             this.data = data;
         }
 
-        public async Task CreateTransaction(Transaction transactionFrom, Transaction transactionTo)
+        public async Task CreateTransaction(Transaction transaction)
         {
-            await data.Transactions!.AddAsync(transactionFrom);
-            await data.Transactions!.AddAsync(transactionTo);
+            await data.Transactions!.AddAsync(transaction);
             await data.SaveChangesAsync();
         }
 
