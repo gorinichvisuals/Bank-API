@@ -77,7 +77,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                     
             if (cardFrom!.Status != CardStatus.active)
             {
-                response.ErrorMessage = string.Format("Card is active.");
+                response.ErrorMessage = string.Format("Card is not active.");
                 return response;
             }
 

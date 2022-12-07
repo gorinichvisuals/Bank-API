@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Bank_API.BusinessLogicLayer.Helpers;
+using System.ComponentModel.DataAnnotations;
 
 namespace Bank_API.BusinessLogicLayer.Models
 {
@@ -8,6 +9,7 @@ namespace Bank_API.BusinessLogicLayer.Models
         public long? Amount { get; set; }
 
         [Required]
+        [CardNumberValidation(ErrorMessage ="Card number is invalid")]
         public long? CardNumber { get; set; }
 
         [StringLength(128)]
