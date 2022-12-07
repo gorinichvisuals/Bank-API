@@ -8,14 +8,8 @@ namespace Bank_API.BusinessLogicLayer.Helpers
         {
             string? toStrValue = value?.ToString();
             string? str = toStrValue!.Substring(0, toStrValue.Length - 4);
-            string? numberPrefix = "414156236523";
 
-            if (str == numberPrefix && toStrValue.Length == 16)
-            {
-                return true;
-            }
-
-            return false;
+            return str == "414156236523" && toStrValue.Length == 16;
         }
     }
 }
