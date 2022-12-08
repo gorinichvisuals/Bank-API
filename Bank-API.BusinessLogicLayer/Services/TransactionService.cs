@@ -55,7 +55,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             if (user == null)
             {
-                response.ErrorMessage = string.Format("User not found or unavailable");
+                response.ErrorMessage = "User not found or unavailable";
                 return response;
             }
 
@@ -63,7 +63,7 @@ namespace Bank_API.BusinessLogicLayer.Services
 
             if(cardFrom == null)
             {
-                response.ErrorMessage = string.Format("Card is not found or unavailable");
+                response.ErrorMessage = "Card is not found or unavailable";
                 return response;
             }
 
@@ -71,31 +71,31 @@ namespace Bank_API.BusinessLogicLayer.Services
                     
             if(cardTo == null)
             {
-                response.ErrorMessage = string.Format("Recipient's card is not found or unavailable");
+                response.ErrorMessage = "Recipient's card is not found or unavailable";
                 return response;
             }
                     
             if (cardFrom!.Status != CardStatus.active)
             {
-                response.ErrorMessage = string.Format("Card is not active.");
+                response.ErrorMessage = "Card is not active.";
                 return response;
             }
 
             if (cardFrom.Currency != cardTo!.Currency)
             {
-                response.ErrorMessage = string.Format("Cards have different currency.");
+                response.ErrorMessage = "Cards have different currency.";
                 return response;
             }
 
             if (cardFrom.Balance <= request.Amount)
             {
-                response.ErrorMessage = string.Format("Insufficient funds on the balance sheet.");
+                response.ErrorMessage = "Insufficient funds on the balance sheet.";
                 return response;
             }
 
             if (cardFrom.Number == request.CardNumber)
             {
-                response.ErrorMessage = string.Format("Unable to send funds to the same card.");
+                response.ErrorMessage = "Unable to send funds to the same card.";
                 return response;
             }
 
@@ -105,7 +105,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 Amount = -request.Amount,
                 Message = request.Message,
                 Type = TransactionType.P2P,
-                Peer = string.Format("{0} {1}", cardTo!.User!.FirstName, cardTo.User.LastName),
+                Peer = ($"{cardTo!.User!.FirstName} {cardTo.User.LastName}"),
                 ResultingBalance = cardFrom.Balance - request.Amount,
             };
 
@@ -115,7 +115,7 @@ namespace Bank_API.BusinessLogicLayer.Services
                 Amount = request.Amount,
                 Message = request.Message,
                 Type = TransactionType.P2P,
-                Peer = string.Format("{0} {1}", user!.FirstName!, user.LastName), 
+                Peer = ($"{user!.FirstName!} {user.LastName}"), 
                 ResultingBalance = cardTo?.Balance + request.Amount,
             };
 
