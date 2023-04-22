@@ -1,9 +1,8 @@
-﻿namespace Bank_API.DataAccessLayer.Enums
+﻿namespace Bank_API.DataAccessLayer.Enums;
+
+public enum Currency
 {
-    public enum Currency
-    {
-        UAH,
-        USD,
-        EUR
-    }
+    UAH,
+    USD,
+    EUR
 }

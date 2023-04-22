@@ -1,0 +1,9 @@
+﻿global using Microsoft.EntityFrameworkCore;
+global using Bank_API.DataAccessLayer.Models;
+global using Bank_API.DataAccessLayer.Repositories.Abstractions;
+global using Bank_API.DataAccessLayer.DataContext;
+global using Bank_API.DataAccessLayer.Enums;
+global using System.Linq.Expressions;
+global using Bank_API.DataAccessLayer.Repositories.Implementations;
+global using Microsoft.Extensions.DependencyInjection;
+global using System.ComponentModel.DataAnnotations;
