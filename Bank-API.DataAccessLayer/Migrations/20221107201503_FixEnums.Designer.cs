@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Bank_API.DataAccessLayer.Migrations
 {
-    [DbContext(typeof(AppDataContext))]
+    [DbContext(typeof(BankAPIContext))]
     [Migration("20221107201503_FixEnums")]
     partial class FixEnums
     {

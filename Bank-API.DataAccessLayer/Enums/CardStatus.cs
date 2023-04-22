@@ -1,9 +1,8 @@
-﻿namespace Bank_API.DataAccessLayer.Enums
+﻿namespace Bank_API.DataAccessLayer.Enums;
+
+public enum CardStatus
 {
-    public enum CardStatus
-    {
-        active,
-        closed,
-        frozen
-    }
+    active,
+    closed,
+    frozen
 }

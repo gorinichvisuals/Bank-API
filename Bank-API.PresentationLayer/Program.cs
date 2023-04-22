@@ -1,21 +1,10 @@
-using Bank_API.BusinessLogicLayer.Interfaces;
-using Bank_API.BusinessLogicLayer.Services;
-using Bank_API.DataAccessLayer.DataContext;
-using Bank_API.DataAccessLayer.Interfaces;
-using Bank_API.DataAccessLayer.Models;
-using Bank_API.DataAccessLayer.Repositories;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System.Reflection;
-using System.Text;
-
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers().AddNewtonsoftJson();
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAppBLLServices();
+builder.Services.AddAppDALServices();
+builder.Services.AddAppPLServices();
 
 builder.Services.AddSwaggerGen(options =>
 {
@@ -42,26 +31,15 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         ValidateIssuerSigningKey = true,
         ValidIssuer = builder.Configuration["Jwt:Issuer"],
         ValidAudience = builder.Configuration["Jwt:Audience"],
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]))
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"]!))
     };
 });
 
 builder.Services.AddAuthorization();
 
 var connectionString = builder.Configuration.GetConnectionString("DefaultConnectionString");
-builder.Services.AddDbContext<AppDataContext>(contextOptions => contextOptions.UseSqlServer(connectionString));
-
-builder.Services.AddScoped<IUserRepository<User>, UserRepository>();
-builder.Services.AddScoped<ICardRepository<Card>, CardRepository>();
-builder.Services.AddScoped<ITransactionRepository<Transaction>, TransactionRepository>();
-
-builder.Services.AddScoped<IAuthService, AuthService>();
-builder.Services.AddScoped<IUserService, UserService>();
-builder.Services.AddScoped<ICardService, CardService>();
-builder.Services.AddScoped<ITransactionService, TransactionService>();
-
-builder.Services.AddScoped<ITokenService, TokenService>();  
-builder.Services.TryAddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+builder.Services.AddDbContext<BankAPIContext>(contextOptions => contextOptions.UseSqlServer(connectionString));
+  
 
 var app = builder.Build();
 

@@ -1,10 +1,9 @@
-﻿namespace Bank_API.DataAccessLayer.Enums
+﻿namespace Bank_API.DataAccessLayer.Enums;
+
+public enum TransactionType
 {
-    public enum TransactionType
-    {
-        P2P,
-        CashDeposit,
-        CashOut,
-        InternetPayment
-    }
+    P2P,
+    CashDeposit,
+    CashOut,
+    InternetPayment
 }

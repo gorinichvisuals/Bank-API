@@ -1,24 +1,18 @@
-﻿using Bank_API.BusinessLogicLayer.Models;
-using Bank_API.DataAccessLayer.Models;
-using System.ComponentModel.DataAnnotations;
-using System.Diagnostics.CodeAnalysis;
+﻿namespace Bank_API.BusinessLogicLayer.Helpers;
 
-namespace Bank_API.BusinessLogicLayer.Helpers
+public class MinAge : ValidationAttribute
 {
-    public class MinAge : ValidationAttribute
+    protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
     {
-        protected override ValidationResult? IsValid(object? value, ValidationContext validationContext)
+        if (value == null)
         {
-            if (value == null)
-            {
-                return null;
-            }
-            
-            var age = DateTime.Now.Year - Convert.ToDateTime(value).Year;
-
-            return (age >= 18)
-                ? ValidationResult.Success
-                : new ValidationResult(ErrorMessage = "User should be at least 18 years old.");
+            return null;
         }
+        
+        var age = DateTime.Now.Year - Convert.ToDateTime(value).Year;
+
+        return (age >= 18)
+            ? ValidationResult.Success
+            : new ValidationResult(ErrorMessage = "User should be at least 18 years old.");
     }
 }
